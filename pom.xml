@@ -126,6 +126,7 @@
                 <configuration>
                     <testNGArtifactName>none:none</testNGArtifactName>
                     <argLine>-XX:+StartAttachListener</argLine>
+                    <skipTests>true</skipTests>
                 </configuration>
                 <executions>
                     <execution>

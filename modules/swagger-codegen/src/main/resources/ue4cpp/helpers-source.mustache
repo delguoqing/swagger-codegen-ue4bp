@@ -69,7 +69,7 @@ const FString& HttpMultipartFormData::GetBoundary() const
 	return Boundary;
 }
 
-void HttpMultipartFormData::SetupHttpRequest(const TSharedRef<IHttpRequest>& HttpRequest)
+void HttpMultipartFormData::SetupHttpRequest(const TSharedRef<IHttpRequest, ESPMode::ThreadSafe>& HttpRequest)
 {
 	if(HttpRequest->GetVerb() != TEXT("POST"))
 	{
