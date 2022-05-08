@@ -499,7 +499,7 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
             return type;
         } else {
             type = sanitizeName(type);
-            return modelNamePrefix + Character.toUpperCase(type.charAt(0)) + type.substring(1);
+            return "F" + modelNamePrefix + Character.toUpperCase(type.charAt(0)) + type.substring(1);
         }
     }
 
