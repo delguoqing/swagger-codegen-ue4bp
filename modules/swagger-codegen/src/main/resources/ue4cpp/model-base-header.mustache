@@ -1,38 +1,46 @@
 {{>licenseInfo}}
 #pragma once
 
+#include "CoreUObject.h"
 #include "Interfaces/IHttpRequest.h"
 #include "Interfaces/IHttpResponse.h"
 #include "Serialization/JsonWriter.h"
 #include "Dom/JsonObject.h"
-
-{{#cppNamespaceDeclarations}}
-namespace {{this}} 
-{
-{{/cppNamespaceDeclarations}}
+#include "{{modelNamePrefix}}BaseModel.generated.h"
 
 typedef TSharedRef<TJsonWriter<>> JsonWriter;
 
-class {{dllapi}} Model
-{ 
+USTRUCT()
+struct {{dllapi}} FNetCodeModel
+{
+	GENERATED_BODY()
+
 public:
-	virtual ~Model() {}
+	virtual ~FNetCodeModel() {}
 	virtual void WriteJson(JsonWriter& Writer) const = 0;
 	virtual bool FromJson(const TSharedPtr<FJsonObject>& JsonObject) = 0;
 };
 
-class {{dllapi}} Request
+USTRUCT()
+struct {{dllapi}} FNetCodeRequest
 {
+
+	GENERATED_BODY()
+
 public:
-	virtual ~Request() {}
+	virtual ~FNetCodeRequest() {}
 	virtual void SetupHttpRequest(const TSharedRef<IHttpRequest, ESPMode::ThreadSafe>& HttpRequest) const = 0;
 	virtual FString ComputePath() const = 0;
 };
 
-class {{dllapi}} Response
+USTRUCT()
+struct {{dllapi}} FNetCodeResponse
 {
+
+	GENERATED_BODY()
+
 public:
-	virtual ~Response() {}
+	virtual ~FNetCodeResponse() {}
 	virtual bool FromJson(const TSharedPtr<FJsonValue>& JsonObject) = 0;
 
 	void SetSuccessful(bool InSuccessful) { Successful = InSuccessful; }
@@ -53,7 +61,3 @@ private:
 	FString ResponseString;
 	FHttpResponsePtr HttpResponse;
 };
-
-{{#cppNamespaceDeclarations}}
-}
-{{/cppNamespaceDeclarations}}

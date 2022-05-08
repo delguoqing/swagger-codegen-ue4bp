@@ -1,16 +1,12 @@
 {{>licenseInfo}}
-#include "{{classname}}.h"
 
+{{#models}}{{#model}}
+#include "{{classFilename}}.h"
 #include "{{unrealModuleName}}Module.h"
 #include "{{modelNamePrefix}}Helpers.h"
 
 #include "Templates/SharedPointer.h"
 
-{{#cppNamespaceDeclarations}}
-namespace {{this}} 
-{
-{{/cppNamespaceDeclarations}}
-{{#models}}{{#model}}
 {{#hasEnums}}
 {{#vars}}
 {{#isEnum}}

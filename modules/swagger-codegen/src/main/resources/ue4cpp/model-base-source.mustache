@@ -1,12 +1,7 @@
 {{>licenseInfo}}
 #include "{{modelNamePrefix}}BaseModel.h"
 
-{{#cppNamespaceDeclarations}}
-namespace {{this}} 
-{
-{{/cppNamespaceDeclarations}}
-
-void Response::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
+void FNetCodeResponse::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
 {
     ResponseCode = InHttpResponseCode;
     SetSuccessful(EHttpResponseCodes::IsOk(InHttpResponseCode));
@@ -15,7 +10,3 @@ void Response::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
         SetResponseString(TEXT("Request Timeout"));
     }
 }
-
-{{#cppNamespaceDeclarations}}
-}
-{{/cppNamespaceDeclarations}}

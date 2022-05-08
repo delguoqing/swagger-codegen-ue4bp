@@ -1,24 +1,26 @@
 {{>licenseInfo}}
 #pragma once
 
+#include "CoreUObject.h"
 #include "{{modelNamePrefix}}BaseModel.h"
 {{#imports}}{{{import}}}
 {{/imports}}
 
-{{#cppNamespaceDeclarations}}
-namespace {{this}} 
-{
-{{/cppNamespaceDeclarations}}
+
 {{#models}}
 {{#model}}
-
+#include "{{classFilename}}.generated.h"
 /*
  * {{classname}}
  *
  * {{description}}
  */
-class {{dllapi}} {{classname}} : public Model
+USTRUCT(BlueprintType,Category={{classname}})
+struct {{dllapi}} {{classname}} : public FNetCodeModel
 {
+
+	GENERATED_BODY()
+
 public:
     virtual ~{{classname}}() {}
 	bool FromJson(const TSharedPtr<FJsonObject>& JsonObject) final;
@@ -46,6 +48,3 @@ public:
 
 {{/model}}
 {{/models}}
-{{#cppNamespaceDeclarations}}
-}
-{{/cppNamespaceDeclarations}}
