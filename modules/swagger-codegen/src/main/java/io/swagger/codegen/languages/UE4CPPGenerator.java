@@ -553,7 +553,7 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
 
     @Override
     public String toApiName(String type) {
-        return modelNamePrefix + Character.toUpperCase(type.charAt(0)) + type.substring(1) + "Api";
+        return "U" + modelNamePrefix + Character.toUpperCase(type.charAt(0)) + type.substring(1) + "Api";
     }
 
     @Override

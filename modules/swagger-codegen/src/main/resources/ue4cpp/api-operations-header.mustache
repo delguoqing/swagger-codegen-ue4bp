@@ -2,10 +2,11 @@
 #pragma once
 
 #include "{{modelNamePrefix}}BaseModel.h"
-#include "{{classname}}.h"
+#include "{{classFilename}}.h"
 
 {{#imports}}{{{import}}}
 {{/imports}}
+#include "{{classFilename}}Operations.generated.h"
 
 {{#operations}}
 {{#operation}}
@@ -13,10 +14,12 @@
 {{#notes}} *
  * {{notes}}{{/notes}}
 */
-class {{dllapi}} {{operationIdCamelCase}}Request : public FNetCodeRequest
+USTRUCT(BlueprintType)
+struct {{dllapi}} F{{operationIdCamelCase}}Request : public FNetCodeRequest
 {
+	GENERATED_BODY()
 public:
-    virtual ~{{operationIdCamelCase}}Request() {}
+    virtual ~F{{operationIdCamelCase}}Request() {}
 	void SetupHttpRequest(const TSharedRef<IHttpRequest,  ESPMode::ThreadSafe>& HttpRequest) const;
 	FString ComputePath() const;
     
@@ -40,10 +43,12 @@ public:
     {{/allParams}}
 };
 
-class {{dllapi}} {{operationIdCamelCase}}Response : public FNetCodeResponse
+USTRUCT(BlueprintType)
+struct {{dllapi}} F{{operationIdCamelCase}}Response : public FNetCodeResponse
 {
+	GENERATED_BODY()
 public:
-    virtual ~{{operationIdCamelCase}}Response() {}
+    virtual ~F{{operationIdCamelCase}}Response() {}
 	{{#responses.0}}
 	void SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode) final;
 	{{/responses.0}}

@@ -1,5 +1,5 @@
 {{>licenseInfo}}
-#include "{{classname}}Operations.h"
+#include "{{classFilename}}Operations.h"
 
 #include "{{unrealModuleName}}Module.h"
 #include "{{modelNamePrefix}}Helpers.h"
@@ -62,7 +62,7 @@ inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, {{operation
 
 {{/isEnum}}
 {{/allParams}}
-FString {{operationIdCamelCase}}Request::ComputePath() const
+FString F{{operationIdCamelCase}}Request::ComputePath() const
 {
 	{{^pathParams.0}}
 	FString Path(TEXT("{{{path}}}"));
@@ -107,7 +107,7 @@ FString {{operationIdCamelCase}}Request::ComputePath() const
 	return Path;
 }
 
-void {{operationIdCamelCase}}Request::SetupHttpRequest(const TSharedRef<IHttpRequest, ESPMode::ThreadSafe>& HttpRequest) const
+void F{{operationIdCamelCase}}Request::SetupHttpRequest(const TSharedRef<IHttpRequest, ESPMode::ThreadSafe>& HttpRequest) const
 {
 	static const TArray<FString> Consumes = { {{#consumes}}TEXT("{{{mediaType}}}"){{#hasMore}}, {{/hasMore}}{{/consumes}} };
 	//static const TArray<FString> Produces = { {{#produces}}TEXT("{{{mediaType}}}"){{#hasMore}}, {{/hasMore}}{{/produces}} };
@@ -250,7 +250,7 @@ void {{operationIdCamelCase}}Request::SetupHttpRequest(const TSharedRef<IHttpReq
 }
 
 {{#responses.0}}
-void {{operationIdCamelCase}}Response::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
+void F{{operationIdCamelCase}}Response::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
 {
 	FNetCodeResponse::SetHttpResponseCode(InHttpResponseCode);
 	switch ((int)InHttpResponseCode)
@@ -267,7 +267,7 @@ void {{operationIdCamelCase}}Response::SetHttpResponseCode(EHttpResponseCodes::T
 }
 {{/responses.0}}
 
-bool {{operationIdCamelCase}}Response::FromJson(const TSharedPtr<FJsonValue>& JsonValue)
+bool F{{operationIdCamelCase}}Response::FromJson(const TSharedPtr<FJsonValue>& JsonValue)
 {
 	{{#returnType}}
 	return TryGetJsonValue(JsonValue, Content);
