@@ -41,7 +41,8 @@ public:
 	{{/isEnum}}
 	{{^isEnum}}
 	{{#description}}/* {{{description}}} */
-	{{/description}}{{^required}}TOptional<{{/required}}{{{datatype}}}{{^required}}>{{/required}} {{name}}{{#required}}{{#defaultValue}} = {{{defaultValue}}}{{/defaultValue}}{{/required}};
+	{{/description}}UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	{{^required}}TOptional<{{/required}}{{{datatype}}}{{^required}}>{{/required}} {{name}}{{#required}}{{#defaultValue}} = {{{defaultValue}}}{{/defaultValue}}{{/required}};
 	{{/isEnum}}
     {{/vars}}
 };
