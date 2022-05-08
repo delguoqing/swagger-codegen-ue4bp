@@ -288,6 +288,9 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
         if (!folder.isEmpty())
             folder += File.separator;
 
+        // remove leading "F"
+        if (name.startsWith("F")) name = name.substring(1);
+
         return "#include \"" + folder + name + ".h\"";
     }
 
