@@ -18,12 +18,12 @@ namespace {{this}}
 {{#notes}} *
  * {{notes}}{{/notes}}
 */
-class {{dllapi}} {{classname}}::{{operationIdCamelCase}}Request : public Request
+class {{dllapi}} {{classname}}::{{operationIdCamelCase}}Request : public FNetCodeRequest
 {
 public:
     virtual ~{{operationIdCamelCase}}Request() {}
 	void SetupHttpRequest(const TSharedRef<IHttpRequest,  ESPMode::ThreadSafe>& HttpRequest) const;
-	FString ComputePath() const final;
+	FString ComputePath() const;
     
 	{{#allParams}}
 	{{#isEnum}}
@@ -45,7 +45,7 @@ public:
     {{/allParams}}
 };
 
-class {{dllapi}} {{classname}}::{{operationIdCamelCase}}Response : public Response
+class {{dllapi}} {{classname}}::{{operationIdCamelCase}}Response : public FNetCodeResponse
 {
 public:
     virtual ~{{operationIdCamelCase}}Response() {}

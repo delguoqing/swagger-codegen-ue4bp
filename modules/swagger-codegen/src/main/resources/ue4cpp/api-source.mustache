@@ -45,7 +45,7 @@ bool {{classname}}::IsValid() const
 	return true;
 }
 
-void {{classname}}::HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceeded, Response& InOutResponse) const
+void {{classname}}::HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceeded, FNetCodeResponse& InOutResponse) const
 {
 	InOutResponse.SetHttpResponse(HttpResponse);
 	InOutResponse.SetSuccessful(bSucceeded);

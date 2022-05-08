@@ -55,8 +55,21 @@ inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, {{classname
 }
 
 {{/isEnum}}
+{{^isEnum}}
+using Swagger::WriteJsonValue;
+using Swagger::TryGetJsonValue;
+{{/isEnum}}
+{{/vars}}
+{{^vars}}
+using Swagger::WriteJsonValue;
+using Swagger::TryGetJsonValue;
 {{/vars}}
 {{/hasEnums}}
+{{^hasEnums}}
+using Swagger::WriteJsonValue;
+using Swagger::TryGetJsonValue;
+{{/hasEnums}}
+
 void {{classname}}::WriteJson(JsonWriter& Writer) const
 {
 	{{#parent}}
@@ -89,6 +102,3 @@ bool {{classname}}::FromJson(const TSharedPtr<FJsonObject>& JsonObject)
 }
 {{/model}}
 {{/models}}
-{{#cppNamespaceDeclarations}}
-}
-{{/cppNamespaceDeclarations}}

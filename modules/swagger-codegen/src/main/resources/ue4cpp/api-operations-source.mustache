@@ -254,7 +254,7 @@ void {{classname}}::{{operationIdCamelCase}}Request::SetupHttpRequest(const TSha
 {{#responses.0}}
 void {{classname}}::{{operationIdCamelCase}}Response::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
 {
-	Response::SetHttpResponseCode(InHttpResponseCode);
+	FNetCodeResponse::SetHttpResponseCode(InHttpResponseCode);
 	switch ((int)InHttpResponseCode)
 	{
 	{{#responses}}
