@@ -4,10 +4,10 @@
 #include "CoreMinimal.h"
 #include "{{modelNamePrefix}}BaseModel.h"
 
-{{#cppNamespaceDeclarations}}
-namespace {{this}} 
-{
-{{/cppNamespaceDeclarations}}
+// forward declaration
+{{#operations}}{{#operation}}class {{operationIdCamelCase}}Request;
+class {{operationIdCamelCase}}Response;
+{{/operation}}{{/operations}}
 
 class {{dllapi}} {{classname}}
 {
@@ -19,9 +19,6 @@ public:
 	void AddHeaderParam(const FString& Key, const FString& Value);
 	void ClearHeaderParams();
 
-	{{#operations}}{{#operation}}class {{operationIdCamelCase}}Request;
-	class {{operationIdCamelCase}}Response;
-	{{/operation}}{{/operations}}
     {{#operations}}{{#operation}}DECLARE_DELEGATE_OneParam(F{{operationIdCamelCase}}Delegate, const {{operationIdCamelCase}}Response&);
     {{/operation}}{{/operations}}
     {{#operations}}{{#operation}}{{#description}}/* {{{description}}} */
@@ -36,7 +33,3 @@ private:
 	FString Url;
 	TMap<FString,FString> AdditionalHeaderParams;
 };
-	
-{{#cppNamespaceDeclarations}}
-}
-{{/cppNamespaceDeclarations}}

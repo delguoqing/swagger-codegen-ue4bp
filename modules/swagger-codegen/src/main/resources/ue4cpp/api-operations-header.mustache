@@ -7,18 +7,13 @@
 {{#imports}}{{{import}}}
 {{/imports}}
 
-{{#cppNamespaceDeclarations}}
-namespace {{this}} 
-{
-{{/cppNamespaceDeclarations}}
-
 {{#operations}}
 {{#operation}}
 /* {{summary}}
 {{#notes}} *
  * {{notes}}{{/notes}}
 */
-class {{dllapi}} {{classname}}::{{operationIdCamelCase}}Request : public FNetCodeRequest
+class {{dllapi}} {{operationIdCamelCase}}Request : public FNetCodeRequest
 {
 public:
     virtual ~{{operationIdCamelCase}}Request() {}
@@ -45,7 +40,7 @@ public:
     {{/allParams}}
 };
 
-class {{dllapi}} {{classname}}::{{operationIdCamelCase}}Response : public FNetCodeResponse
+class {{dllapi}} {{operationIdCamelCase}}Response : public FNetCodeResponse
 {
 public:
     virtual ~{{operationIdCamelCase}}Response() {}
@@ -59,6 +54,3 @@ public:
 
 {{/operation}}
 {{/operations}}
-{{#cppNamespaceDeclarations}}
-}
-{{/cppNamespaceDeclarations}}
