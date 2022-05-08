@@ -18,11 +18,7 @@ import io.swagger.models.properties.StringProperty;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /*
 * Note: Developed with Unreal 4.24
@@ -529,6 +525,19 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
     public Map<String, Object> postProcessModels(Map<String, Object> objs) {
         // TODO: This could be moved to AbstractCPPGenerator, as model enums are virtually unusable without
         objs = super.postProcessModels(objs);
+
+        // force `required`, because TOptional<> cannot be exposed to BP
+        List<Map<String, Object>> models = (List<Map<String, Object>>) objs.get("models");
+        for (Map<String, Object> model : models) {
+            Object v = model.get("model");
+            if (v instanceof CodegenModel) {
+                CodegenModel m = (CodegenModel) v;
+                List<String> d = new ArrayList<String>();
+                for (CodegenProperty p : m.allVars)
+                    p.required = true;
+            }
+        }
+
         return postProcessModelsEnum(objs);
     }
 
