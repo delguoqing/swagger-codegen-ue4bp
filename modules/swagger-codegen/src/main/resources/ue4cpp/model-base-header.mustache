@@ -14,34 +14,29 @@ USTRUCT()
 struct {{dllapi}} FNetCodeModel
 {
 	GENERATED_BODY()
-
 public:
 	virtual ~FNetCodeModel() {}
-	virtual void WriteJson(JsonWriter& Writer) const = 0;
-	virtual bool FromJson(const TSharedPtr<FJsonObject>& JsonObject) = 0;
+	virtual void WriteJson(JsonWriter& Writer) const {}
+	virtual bool FromJson(const TSharedPtr<FJsonObject>& JsonObject) { return false; }
 };
 
 USTRUCT()
 struct {{dllapi}} FNetCodeRequest
 {
-
 	GENERATED_BODY()
-
 public:
 	virtual ~FNetCodeRequest() {}
-	virtual void SetupHttpRequest(const TSharedRef<IHttpRequest, ESPMode::ThreadSafe>& HttpRequest) const = 0;
-	virtual FString ComputePath() const = 0;
+	virtual void SetupHttpRequest(const TSharedRef<IHttpRequest, ESPMode::ThreadSafe>& HttpRequest) const {}
+	virtual FString ComputePath() { return FString(); }
 };
 
 USTRUCT()
 struct {{dllapi}} FNetCodeResponse
 {
-
 	GENERATED_BODY()
-
 public:
 	virtual ~FNetCodeResponse() {}
-	virtual bool FromJson(const TSharedPtr<FJsonValue>& JsonObject) = 0;
+	virtual bool FromJson(const TSharedPtr<FJsonValue>& JsonObject) { return false; }
 
 	void SetSuccessful(bool InSuccessful) { Successful = InSuccessful; }
 	bool IsSuccessful() const { return Successful; }
