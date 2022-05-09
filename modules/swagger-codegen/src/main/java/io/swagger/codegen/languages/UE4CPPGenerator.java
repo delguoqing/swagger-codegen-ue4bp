@@ -542,6 +542,20 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
     }
 
     @Override
+    public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
+        // force `required`, because TOptional<> cannot be exposed to BP
+        Map<String, Object> operations = (Map<String, Object>) objs.get("operations");
+        List<CodegenOperation> operationList = (List<CodegenOperation>) operations.get("operation");
+
+        for (CodegenOperation op1 : operationList) {
+            for (CodegenParameter p : op1.allParams) {
+                p.required = true;
+            }
+        }
+        return objs;
+    }
+
+    @Override
     public String toEnumVarName(String name, String datatype) {
         return toVarName(name);
     }
