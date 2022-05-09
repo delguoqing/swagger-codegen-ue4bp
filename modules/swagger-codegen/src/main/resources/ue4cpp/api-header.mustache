@@ -27,7 +27,7 @@ public:
     {{/operation}}{{/operations}}
     {{#operations}}{{#operation}}{{#description}}/* {{{description}}} */
 	{{/description}}UFUNCTION(BlueprintCallable, Meta=(BluepirntPure=false))
-	bool {{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request, const F{{operationIdCamelCase}}Delegate& Delegate) const;
+	bool {{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request, const F{{operationIdCamelCase}}Delegate& Delegate);
     {{/operation}}{{/operations}}
 private:
     {{#operations}}{{#operation}}void On{{operationIdCamelCase}}Response(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, F{{operationIdCamelCase}}Delegate Delegate) const;
