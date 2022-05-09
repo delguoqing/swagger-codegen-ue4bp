@@ -20,7 +20,7 @@ public:
 	virtual bool FromJson(const TSharedPtr<FJsonObject>& JsonObject) { return false; }
 };
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct {{dllapi}} FNetCodeRequest
 {
 	GENERATED_BODY()
@@ -30,7 +30,7 @@ public:
 	virtual FString ComputePath() { return FString(); }
 };
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct {{dllapi}} FNetCodeResponse
 {
 	GENERATED_BODY()

@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "{{modelNamePrefix}}BaseModel.h"
+#include "{{classFilename}}Operations.h"
 #include "{{classFilename}}.generated.h"
 
 // forward declaration
@@ -22,10 +23,11 @@ public:
 	void AddHeaderParam(const FString& Key, const FString& Value);
 	void ClearHeaderParams();
 
-    {{#operations}}{{#operation}}DECLARE_DELEGATE_OneParam(F{{operationIdCamelCase}}Delegate, const F{{operationIdCamelCase}}Response&);
+    {{#operations}}{{#operation}}DECLARE_DYNAMIC_DELEGATE_OneParam(F{{operationIdCamelCase}}Delegate, const F{{operationIdCamelCase}}Response&, Response);
     {{/operation}}{{/operations}}
     {{#operations}}{{#operation}}{{#description}}/* {{{description}}} */
-	{{/description}}bool {{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request, const F{{operationIdCamelCase}}Delegate& Delegate = F{{operationIdCamelCase}}Delegate()) const;
+	{{/description}}UFUNCTION(BlueprintCallable, Meta=(BluepirntPure=false))
+	bool {{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request, const F{{operationIdCamelCase}}Delegate& Delegate) const;
     {{/operation}}{{/operations}}
 private:
     {{#operations}}{{#operation}}void On{{operationIdCamelCase}}Response(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, F{{operationIdCamelCase}}Delegate Delegate) const;
