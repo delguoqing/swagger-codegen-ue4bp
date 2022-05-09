@@ -19,8 +19,11 @@ public:
 	{{classname}}();
 	~{{classname}}();
 
+	UFUNCTION(BlueprintCallable)
 	void SetURL(const FString& Url);
+	UFUNCTION(BlueprintCallable)
 	void AddHeaderParam(const FString& Key, const FString& Value);
+	UFUNCTION(BlueprintCallable)
 	void ClearHeaderParams();
 
     {{#operations}}{{#operation}}DECLARE_DYNAMIC_DELEGATE_OneParam(F{{operationIdCamelCase}}Delegate, const F{{operationIdCamelCase}}Response&, Response);
