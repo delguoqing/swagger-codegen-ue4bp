@@ -42,7 +42,7 @@ public:
 	bool IsSuccessful() const { return Successful; }
 
 	virtual void SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode);
-	EHttpResponseCodes::Type GetHttpResponseCode() const { return ResponseCode; }
+	EHttpResponseCodes::Type GetHttpResponseCode() const { return (EHttpResponseCodes::Type)ResponseCode; }
 
 	void SetResponseString(const FString& InResponseString) { ResponseString = InResponseString; }
 	const FString& GetResponseString() const { return ResponseString; }
@@ -50,9 +50,13 @@ public:
 	void SetHttpResponse(const FHttpResponsePtr& InHttpResponse) { HttpResponse = InHttpResponse; }
 	const FHttpResponsePtr& GetHttpResponse() const { return HttpResponse; }
 
-private:
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool Successful;
-	EHttpResponseCodes::Type ResponseCode;
+	// TODO: make a enum type for BP
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int32 ResponseCode;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FString ResponseString;
+
 	FHttpResponsePtr HttpResponse;
 };

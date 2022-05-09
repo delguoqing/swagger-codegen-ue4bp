@@ -38,7 +38,8 @@ public:
 	{{/isEnum}}
 	{{^isEnum}}
 	{{#description}}/* {{{description}}} */
-	{{/description}}{{^required}}TOptional<{{/required}}{{{dataType}}}{{^required}}>{{/required}} {{paramName}}{{#required}}{{#defaultValue}} = {{{defaultValue}}}{{/defaultValue}}{{/required}};
+	{{/description}}UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	{{^required}}TOptional<{{/required}}{{{dataType}}}{{^required}}>{{/required}} {{paramName}}{{#required}}{{#defaultValue}} = {{{defaultValue}}}{{/defaultValue}}{{/required}};
 	{{/isEnum}}
     {{/allParams}}
 };
@@ -54,6 +55,7 @@ public:
 	{{/responses.0}}
 	bool FromJson(const TSharedPtr<FJsonValue>& JsonObject) final;
     
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
     {{#returnType}}{{{returnType}}} Content;{{/returnType}}
 };
 
