@@ -16,7 +16,7 @@
  *
  * {{description}}
  */
-USTRUCT(BlueprintType, Category={{classname}}, meta=(DisplayName="{{name}}", HasNativeBreak="{{unrealModuleName}}.U{{classname}}HelperLibrary.Break", HasNativeMake="{{unrealModuleName}}.U{{classname}}HelperLibrary.Make"))
+USTRUCT(BlueprintType, Category={{unrealModuleName}}, meta=(DisplayName="{{name}}", HasNativeBreak="{{unrealModuleName}}.U{{classname}}HelperLibrary.Break", HasNativeMake="{{unrealModuleName}}.U{{classname}}HelperLibrary.Make"))
 struct {{dllapi}} {{classname}} : public F{{modelNamePrefix}}BaseModel
 {
 
@@ -53,9 +53,9 @@ class U{{classname}}HelperLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 public:
-	UFUNCTION(BlueprintPure, Category = "Cat", meta = (BlueprintThreadSafe))
+	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Make {{name}} Struct"))
 	static {{classname}} Make({{#vars}}{{datatype}} {{name}}{{#hasMore}},{{/hasMore}}{{/vars}});
-	UFUNCTION(BlueprintPure, Category = "Cat", meta = (BlueprintThreadSafe))
+	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Break {{name}} Struct"))
 	static void Break(const {{classname}}& {{classVarName}}{{#vars}}, {{datatype}}& {{name}}{{/vars}});
 };
 {{/model}}
