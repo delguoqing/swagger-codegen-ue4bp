@@ -276,4 +276,17 @@ bool F{{operationIdCamelCase}}Response::FromJson(const TSharedPtr<FJsonValue>& J
 	return true;
 	{{/returnType}}
 }
+
+void U{{operationIdCamelCase}}HelperLibrary::BreakRequest(const F{{operationIdCamelCase}}Request& InRequest{{#allParams}}, {{dataType}}& Out{{paramName}}{{/allParams}})
+{
+	{{#vars}}Out{{name}} = InRequest.{{name}};{{/vars}}
+}
+
+F{{operationIdCamelCase}}Request U{{operationIdCamelCase}}HelperLibrary::MakeRequest({{#allParams}}{{dataType}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/allParams}})
+{
+	F{{operationIdCamelCase}}Request _OutRequest;
+	{{#allParams}}_OutRequest.{{paramName}} = {{paramName}};{{/allParams}}
+	return _OutRequest;
+}
+
 {{/operation}}{{/operations}}

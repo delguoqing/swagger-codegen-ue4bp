@@ -1,6 +1,7 @@
 {{>licenseInfo}}
 #pragma once
 
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "{{modelNamePrefix}}BaseModel.h"
 
 {{#imports}}{{{import}}}
@@ -13,7 +14,7 @@
 {{#notes}} *
  * {{notes}}{{/notes}}
 */
-USTRUCT(BlueprintType)
+USTRUCT(BlueprintType, Category={{unrealModuleName}}, meta=(DisplayName="{{nickname}}", HasNativeBreak="{{unrealModuleName}}.U{{operationIdCamelCase}}HelperLibrary.BreakRequest", HasNativeMake="{{unrealModuleName}}.U{{operationIdCamelCase}}HelperLibrary.MakeRequest"))
 struct {{dllapi}} F{{operationIdCamelCase}}Request : public F{{modelNamePrefix}}BaseRequest
 {
 	GENERATED_BODY()
@@ -58,5 +59,15 @@ public:
     {{#returnType}}{{{returnType}}} Content;{{/returnType}}
 };
 
+UCLASS()
+class U{{operationIdCamelCase}}HelperLibrary : public UBlueprintFunctionLibrary
+{
+	GENERATED_BODY()
+public:
+	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Make {{nickname}} Request Struct"))
+	static F{{operationIdCamelCase}}Request MakeRequest({{#allParams}}{{dataType}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Break {{nickname}} Request Struct"))
+	static void BreakRequest(const F{{operationIdCamelCase}}Request& InRequest{{#allParams}}, {{dataType}}& {{paramName}}{{/allParams}});
+};
 {{/operation}}
 {{/operations}}

@@ -561,6 +561,19 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
             }
         }
 
+        // setup nickname for operations (used as DisplayName)
+        for (CodegenOperation op1: operationList) {
+            if (StringUtils.isBlank(op1.operationIdOriginal)) {
+                op1.nickname = op1.path.replaceAll("\\{", "").replaceAll("\\}", "");
+                String[] parts = op1.nickname.split("/");
+                op1.nickname = parts[parts.length - 1];
+                if (!op1.httpMethod.equalsIgnoreCase("GET")) {  // omit GET because it is most commonly used
+                    op1.nickname += op1.httpMethod.toUpperCase();
+                }
+            }
+        }
+
+        // Once I want to make a shorter name for UE4, which ends up solved by DisplayName + HasNativeBreak/Make
         if (shortPathAsOperationIdFallback && operationList.size() > 0)
         {
             String[] fullIds = new String[operationList.size()];
