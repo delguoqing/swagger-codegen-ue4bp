@@ -9,7 +9,7 @@
 #include "HttpModule.h"
 #include "PlatformHttp.h"
 
-using namespace Swagger;
+using namespace {{cppNamespace}};
 
 {{#operations}}{{#operation}}
 {{#allParams}}
@@ -252,7 +252,7 @@ void F{{operationIdCamelCase}}Request::SetupHttpRequest(const TSharedRef<IHttpRe
 {{#responses.0}}
 void F{{operationIdCamelCase}}Response::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
 {
-	FNetCodeResponse::SetHttpResponseCode(InHttpResponseCode);
+	F{{modelNamePrefix}}BaseResponse::SetHttpResponseCode(InHttpResponseCode);
 	switch ((int)InHttpResponseCode)
 	{
 	{{#responses}}

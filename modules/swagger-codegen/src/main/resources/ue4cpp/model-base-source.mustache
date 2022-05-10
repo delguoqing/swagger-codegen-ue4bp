@@ -1,7 +1,7 @@
 {{>licenseInfo}}
 #include "{{modelNamePrefix}}BaseModel.h"
 
-void FNetCodeResponse::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
+void F{{modelNamePrefix}}BaseResponse::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
 {
     ResponseCode = InHttpResponseCode;
     SetSuccessful(EHttpResponseCodes::IsOk(InHttpResponseCode));

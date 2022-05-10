@@ -36,7 +36,7 @@ private:
     {{#operations}}{{#operation}}void On{{operationIdCamelCase}}Response(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, F{{operationIdCamelCase}}Delegate Delegate) const;
     {{/operation}}{{/operations}}
 	bool IsValid() const;
-	void HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceeded, FNetCodeResponse& InOutResponse) const;
+	void HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceeded, F{{modelNamePrefix}}BaseResponse& InOutResponse) const;
 
 	FString Url;
 	TMap<FString,FString> AdditionalHeaderParams;

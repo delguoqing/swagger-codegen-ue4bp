@@ -10,7 +10,7 @@
 class IHttpRequest;
 
 {{#cppNamespaceDeclarations}}
-namespace {{this}} 
+namespace {{cppNamespace}} 
 {
 {{/cppNamespaceDeclarations}}
 
@@ -109,7 +109,7 @@ inline FStringFormatArg ToStringFormatArg(const TArray<uint8>& Value)
 	return FStringFormatArg(Base64UrlEncode(Value));
 }
 
-template<typename T, typename std::enable_if<!std::is_base_of<FNetCodeModel, T>::value, int>::type = 0>
+template<typename T, typename std::enable_if<!std::is_base_of<F{{modelNamePrefix}}BaseModel, T>::value, int>::type = 0>
 inline FString ToString(const T& Value)
 {
 	return FString::Format(TEXT("{0}"), { ToStringFormatArg(Value) });
@@ -125,7 +125,7 @@ inline FString ToString(const TArray<uint8>& Value)
 	return Base64UrlEncode(Value);
 }
 
-inline FString ToString(const FNetCodeModel& Value)
+inline FString ToString(const F{{modelNamePrefix}}BaseModel& Value)
 {
 	FString String;
 	JsonWriter Writer = TJsonWriterFactory<>::Create(&String);
@@ -196,7 +196,7 @@ inline FString CollectionToUrlString_multi(const TArray<T>& Collection, const TC
 
 //////////////////////////////////////////////////////////////////////////
 
-template<typename T, typename std::enable_if<!std::is_base_of<FNetCodeModel, T>::value, int>::type = 0>
+template<typename T, typename std::enable_if<!std::is_base_of<F{{modelNamePrefix}}BaseModel, T>::value, int>::type = 0>
 inline void WriteJsonValue(JsonWriter& Writer, const T& Value)
 {
 	Writer->WriteValue(Value);
@@ -207,7 +207,7 @@ inline void WriteJsonValue(JsonWriter& Writer, const FDateTime& Value)
 	Writer->WriteValue(Value.ToIso8601());
 }
 
-inline void WriteJsonValue(JsonWriter& Writer, const FNetCodeModel& Value)
+inline void WriteJsonValue(JsonWriter& Writer, const F{{modelNamePrefix}}BaseModel& Value)
 {
 	Value.WriteJson(Writer);
 }
@@ -316,7 +316,7 @@ inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, bool& Value
 		return false;
 }
 
-template<typename T, typename std::enable_if<!std::is_base_of<FNetCodeModel, T>::value, int>::type = 0>
+template<typename T, typename std::enable_if<!std::is_base_of<F{{modelNamePrefix}}BaseModel, T>::value, int>::type = 0>
 inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, T& Value)
 {
 	T TmpValue;
@@ -329,7 +329,7 @@ inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, T& Value)
 		return false;
 }
 
-inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, FNetCodeModel& Value)
+inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, F{{modelNamePrefix}}BaseModel& Value)
 {
 	const TSharedPtr<FJsonObject>* Object;
 	if (JsonValue->TryGetObject(Object))

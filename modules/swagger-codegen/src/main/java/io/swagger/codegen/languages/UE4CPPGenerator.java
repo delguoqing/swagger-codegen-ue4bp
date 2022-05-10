@@ -36,6 +36,8 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
     public static final String UNREAL_MODULE_NAME = "unrealModuleName";
     public static final String UNREAL_MODULE_NAME_DESC = "Name of the generated unreal module (optional)";
     public static final String OPTIONAL_PROJECT_FILE_DESC = "Generate Build.cs";
+    public static final String SHORT_PATH_AS_OPERATION_ID_FALLBACK = "shortPathAsOperationIdFallback";
+    public static final String SHORT_PATH_AS_OPERATION_ID_FALLBACK_DESC = "When opeartion id is not defined, try to figure out a short path and use it as the operation id while avoid naming collision.";
 
     protected String unrealModuleName = "Swagger";
     // Will be treated as pointer
@@ -49,6 +51,7 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
     protected Set<String> systemIncludes = new HashSet<String>();
     protected String cppNamespace = unrealModuleName;
     protected boolean optionalProjectFileFlag = true;
+    protected boolean shortPathAsOperationIdFallback = false;
     
 
     public UE4CPPGenerator() {
@@ -107,6 +110,7 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
         addOption(CPP_NAMESPACE, CPP_NAMESPACE_DESC, this.cppNamespace);
         addOption(UNREAL_MODULE_NAME, UNREAL_MODULE_NAME_DESC, this.unrealModuleName);
         addSwitch(CodegenConstants.OPTIONAL_PROJECT_FILE, OPTIONAL_PROJECT_FILE_DESC, this.optionalProjectFileFlag);
+        addSwitch(SHORT_PATH_AS_OPERATION_ID_FALLBACK, SHORT_PATH_AS_OPERATION_ID_FALLBACK_DESC, this.shortPathAsOperationIdFallback);
 
         /*
          * Additional Properties.  These values can be passed to the templates and
@@ -216,6 +220,10 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
             setOptionalProjectFileFlag(convertPropertyToBooleanAndWriteBack(CodegenConstants.OPTIONAL_PROJECT_FILE));
         } else {
             additionalProperties.put(CodegenConstants.OPTIONAL_PROJECT_FILE, optionalProjectFileFlag);
+        }
+
+        if (additionalProperties.containsKey(SHORT_PATH_AS_OPERATION_ID_FALLBACK)) {
+            this.shortPathAsOperationIdFallback = convertPropertyToBooleanAndWriteBack(SHORT_PATH_AS_OPERATION_ID_FALLBACK);
         }
 
         if(updateSupportingFiles) {
@@ -550,6 +558,88 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
         for (CodegenOperation op1 : operationList) {
             for (CodegenParameter p : op1.allParams) {
                 p.required = true;
+            }
+        }
+
+        if (shortPathAsOperationIdFallback && operationList.size() > 0)
+        {
+            String[] fullIds = new String[operationList.size()];
+            String[] shortIds = new String[operationList.size()];
+            int[] startIndices = new int[operationList.size()];
+
+            HashSet<String> allIds = new HashSet<String>();
+            List<String> badIds = new ArrayList<String>();
+
+            for (int i = 0; i < operationList.size(); i ++) {
+                CodegenOperation op1 = operationList.get(i);
+                if (StringUtils.isBlank(op1.operationIdOriginal)) {
+                    fullIds[i] = op1.path.replaceAll("\\{", "").replaceAll("\\}", "").toLowerCase();
+                    if (!op1.httpMethod.equalsIgnoreCase("GET")) {  // omit GET because it is most commonly used
+                        fullIds[i] = fullIds[i] + op1.httpMethod.toUpperCase();
+                    }
+                    startIndices[i] = fullIds[i].lastIndexOf("/");
+                } else {
+                    shortIds[i] = op1.operationId;
+                    startIndices[i] = -1;
+                }
+                shortIds[i] = fullIds[i].substring(startIndices[i] + 1);
+            }
+
+            for (String shortId : shortIds) {
+                if (allIds.contains(shortId)) {
+                    badIds.add(shortId);
+                } else {
+                    allIds.add(shortId);
+                }
+            }
+
+            boolean isProgressing = true;
+            while (isProgressing && !badIds.isEmpty()) {
+                String badId = badIds.remove(badIds.size() - 1);
+                System.out.println("processing bad id " + badId);
+                if (!allIds.contains(badId)) {
+                    continue;
+                }
+
+                allIds.remove(badId);
+
+                // check for naming collisions && try to advance
+                System.out.println("-----> resolving name collision for " + badId);
+                isProgressing = false;
+                for (int i = 0; i < operationList.size(); i ++) {
+                    if (shortIds[i] != badId) continue;
+                    String newId;
+                    if (startIndices[i] != -1) {
+                        System.out.println("short name for " + operationList.get(i).path + "was " + badId);
+                        isProgressing = true;
+                        startIndices[i] = fullIds[i].lastIndexOf("/", startIndices[i] - 1);
+                        newId = shortIds[i] = fullIds[i].substring(startIndices[i] + 1);
+                        System.out.println("extends to " + newId);
+                    } else {
+                        newId = badId;
+                        System.out.println(operationList.get(i).path + "cannot be extend anymore!");
+                    }
+                    if (allIds.contains(newId)) {
+                        badIds.add(shortIds[i]);
+                    } else {
+                        allIds.add(newId);
+                    }
+                }
+            }
+
+            if (badIds.isEmpty()) {
+                for (int i = 0; i < operationList.size(); i ++) {
+                    CodegenOperation op1 = operationList.get(i);
+                    String[] parts = shortIds[i].split("/");
+                    String opId = StringUtils.capitalize(modelNamePrefix);
+                    for (String part : parts) {
+                        opId += StringUtils.capitalize(part);
+                    }
+                    op1.operationId = opId;
+                    op1.operationIdLowerCase = opId.toLowerCase();
+                    op1.operationIdCamelCase = camelize(opId);
+                    op1.operationIdSnakeCase = snakeCase(opId);
+                }
             }
         }
         return objs;

@@ -11,31 +11,31 @@
 typedef TSharedRef<TJsonWriter<>> JsonWriter;
 
 USTRUCT()
-struct {{dllapi}} FNetCodeModel
+struct {{dllapi}} F{{modelNamePrefix}}BaseModel
 {
 	GENERATED_BODY()
 public:
-	virtual ~FNetCodeModel() {}
+	virtual ~F{{modelNamePrefix}}BaseModel() {}
 	virtual void WriteJson(JsonWriter& Writer) const {}
 	virtual bool FromJson(const TSharedPtr<FJsonObject>& JsonObject) { return false; }
 };
 
 USTRUCT(BlueprintType)
-struct {{dllapi}} FNetCodeRequest
+struct {{dllapi}} F{{modelNamePrefix}}BaseRequest
 {
 	GENERATED_BODY()
 public:
-	virtual ~FNetCodeRequest() {}
+	virtual ~F{{modelNamePrefix}}BaseRequest() {}
 	virtual void SetupHttpRequest(const TSharedRef<IHttpRequest, ESPMode::ThreadSafe>& HttpRequest) const {}
 	virtual FString ComputePath() { return FString(); }
 };
 
 USTRUCT(BlueprintType)
-struct {{dllapi}} FNetCodeResponse
+struct {{dllapi}} F{{modelNamePrefix}}BaseResponse
 {
 	GENERATED_BODY()
 public:
-	virtual ~FNetCodeResponse() {}
+	virtual ~F{{modelNamePrefix}}BaseResponse() {}
 	virtual bool FromJson(const TSharedPtr<FJsonValue>& JsonObject) { return false; }
 
 	void SetSuccessful(bool InSuccessful) { Successful = InSuccessful; }

@@ -14,7 +14,7 @@
  * {{notes}}{{/notes}}
 */
 USTRUCT(BlueprintType)
-struct {{dllapi}} F{{operationIdCamelCase}}Request : public FNetCodeRequest
+struct {{dllapi}} F{{operationIdCamelCase}}Request : public F{{modelNamePrefix}}BaseRequest
 {
 	GENERATED_BODY()
 public:
@@ -44,7 +44,7 @@ public:
 };
 
 USTRUCT(BlueprintType)
-struct {{dllapi}} F{{operationIdCamelCase}}Response : public FNetCodeResponse
+struct {{dllapi}} F{{operationIdCamelCase}}Response : public F{{modelNamePrefix}}BaseResponse
 {
 	GENERATED_BODY()
 public:

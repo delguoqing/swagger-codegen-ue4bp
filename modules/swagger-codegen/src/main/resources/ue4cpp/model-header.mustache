@@ -2,6 +2,7 @@
 #pragma once
 
 #include "CoreUObject.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "{{modelNamePrefix}}BaseModel.h"
 {{#imports}}{{{import}}}
 {{/imports}}
@@ -15,8 +16,8 @@
  *
  * {{description}}
  */
-USTRUCT(BlueprintType,Category={{classname}})
-struct {{dllapi}} {{classname}} : public FNetCodeModel
+USTRUCT(BlueprintType, Category={{classname}}, meta=(DisplayName="{{name}}", HasNativeBreak="{{unrealModuleName}}.U{{classname}}HelperLibrary.Break", HasNativeMake="{{unrealModuleName}}.U{{classname}}HelperLibrary.Make"))
+struct {{dllapi}} {{classname}} : public F{{modelNamePrefix}}BaseModel
 {
 
 	GENERATED_BODY()
@@ -47,5 +48,15 @@ public:
     {{/vars}}
 };
 
+UCLASS()
+class U{{classname}}HelperLibrary : public UBlueprintFunctionLibrary
+{
+	GENERATED_BODY()
+public:
+	UFUNCTION(BlueprintPure, Category = "Cat", meta = (BlueprintThreadSafe))
+	static {{classname}} Make({{#vars}}{{datatype}} {{name}}{{#hasMore}},{{/hasMore}}{{/vars}});
+	UFUNCTION(BlueprintPure, Category = "Cat", meta = (BlueprintThreadSafe))
+	static void Break(const {{classname}}& {{classVarName}}{{#vars}}, {{datatype}}& {{name}}{{/vars}});
+};
 {{/model}}
 {{/models}}
