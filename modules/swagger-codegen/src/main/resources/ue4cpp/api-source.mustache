@@ -51,7 +51,8 @@ void {{classname}}::HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceede
 		FString ContentType = HttpResponse->GetContentType();
 		FString Content;
 
-		if (ContentType == TEXT("application/json"))
+		// e.g. application/json; charset=utf8
+		if (ContentType.StartsWith(TEXT("application/json")))
 		{
 			Content = HttpResponse->GetContentAsString();
 
