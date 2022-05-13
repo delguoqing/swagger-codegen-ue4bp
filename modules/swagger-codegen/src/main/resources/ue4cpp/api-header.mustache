@@ -11,7 +11,7 @@
 struct F{{operationIdCamelCase}}Response;
 {{/operation}}{{/operations}}
 
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, Category="{{unrealModuleName}}")
 class {{dllapi}} {{classname}}: public UObject
 {
 	GENERATED_BODY()
@@ -29,7 +29,7 @@ public:
     {{#operations}}{{#operation}}DECLARE_DYNAMIC_DELEGATE_OneParam(F{{operationIdCamelCase}}Delegate, const F{{operationIdCamelCase}}Response&, Response);
     {{/operation}}{{/operations}}
     {{#operations}}{{#operation}}{{#description}}/* {{{description}}} */
-	{{/description}}UFUNCTION(BlueprintCallable, Meta=(BluepirntPure=false))
+	{{/description}}UFUNCTION(BlueprintCallable, Meta=(BluepirntPure=false, DisplayName="{{nickname}}"))
 	bool {{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request, const F{{operationIdCamelCase}}Delegate& Delegate);
     {{/operation}}{{/operations}}
 private:

@@ -289,4 +289,21 @@ F{{operationIdCamelCase}}Request U{{operationIdCamelCase}}HelperLibrary::MakeReq
 	return _OutRequest;
 }
 
+F{{operationIdCamelCase}}Response U{{operationIdCamelCase}}HelperLibrary::MakeResponse(bool Successful, int32 ResponseCode, FString ResponseString{{#returnType}}, {{{returnType}}} Content{{/returnType}})
+{
+	F{{operationIdCamelCase}}Response _OutResponse;
+	_OutResponse.Successful = Successful;
+	_OutResponse.ResponseCode = ResponseCode;
+	_OutResponse.ResponseString = ResponseString;
+	{{#returnType}}_OutResponse.Content = Content;{{/returnType}}
+	return _OutResponse;
+}
+
+void U{{operationIdCamelCase}}HelperLibrary::BreakResponse(const F{{operationIdCamelCase}}Response& InResponse, bool& Successful, int32& ResponseCode, FString& ResponseString{{#returnType}}, {{{returnType}}}& Content{{/returnType}})
+{
+	Successful = InResponse.Successful;
+	ResponseCode = InResponse.ResponseCode;
+	ResponseString = InResponse.ResponseString;
+	{{#returnType}}Content = InResponse.Content;{{/returnType}}
+}
 {{/operation}}{{/operations}}

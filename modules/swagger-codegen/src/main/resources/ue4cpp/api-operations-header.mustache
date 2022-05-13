@@ -14,7 +14,7 @@
 {{#notes}} *
  * {{notes}}{{/notes}}
 */
-USTRUCT(BlueprintType, Category={{unrealModuleName}}, meta=(DisplayName="{{nickname}}", HasNativeBreak="{{unrealModuleName}}.U{{operationIdCamelCase}}HelperLibrary.BreakRequest", HasNativeMake="{{unrealModuleName}}.U{{operationIdCamelCase}}HelperLibrary.MakeRequest"))
+USTRUCT(BlueprintType, Category={{unrealModuleName}}, meta=(DisplayName="{{nickname}}Request", HasNativeBreak="{{unrealModuleName}}.{{operationIdCamelCase}}HelperLibrary.BreakRequest", HasNativeMake="{{unrealModuleName}}.{{operationIdCamelCase}}HelperLibrary.MakeRequest"))
 struct {{dllapi}} F{{operationIdCamelCase}}Request : public F{{modelNamePrefix}}BaseRequest
 {
 	GENERATED_BODY()
@@ -44,7 +44,7 @@ public:
     {{/allParams}}
 };
 
-USTRUCT(BlueprintType)
+USTRUCT(BlueprintType, Category={{unrealModuleName}}, meta=(DisplayName="{{nickname}}Response", HasNativeBreak="{{unrealModuleName}}.{{operationIdCamelCase}}HelperLibrary.BreakResponse", HasNativeMake="{{unrealModuleName}}.{{operationIdCamelCase}}HelperLibrary.MakeResponse"))
 struct {{dllapi}} F{{operationIdCamelCase}}Response : public F{{modelNamePrefix}}BaseResponse
 {
 	GENERATED_BODY()
@@ -59,7 +59,7 @@ public:
     {{#returnType}}{{{returnType}}} Content;{{/returnType}}
 };
 
-UCLASS()
+UCLASS(NotBlueprintType)
 class U{{operationIdCamelCase}}HelperLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
@@ -68,6 +68,11 @@ public:
 	static F{{operationIdCamelCase}}Request MakeRequest({{#allParams}}{{dataType}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Break {{nickname}} Request Struct"))
 	static void BreakRequest(const F{{operationIdCamelCase}}Request& InRequest{{#allParams}}, {{dataType}}& {{paramName}}{{/allParams}});
+	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Make {{nickname}} Response Struct"))
+	static F{{operationIdCamelCase}}Response MakeResponse(bool Successful, int32 ResponseCode, FString ResponseString{{#returnType}}, {{{returnType}}} Content{{/returnType}});
+	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Break {{nickname}} Response Struct"))
+	static void BreakResponse(const F{{operationIdCamelCase}}Response& InResponse, bool& Successful, int32& ResponseCode, FString& ResponseString{{#returnType}}, {{{returnType}}}& Content{{/returnType}});
+
 };
 {{/operation}}
 {{/operations}}
