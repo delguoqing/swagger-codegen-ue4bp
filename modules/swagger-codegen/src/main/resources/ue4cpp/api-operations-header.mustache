@@ -38,7 +38,7 @@ public:
 	{{/isEnum}}
 	{{^isEnum}}
 	{{#description}}/* {{{description}}} */
-	{{/description}}UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	{{/description}}UPROPERTY(BlueprintReadWrite, EditAnywhere{{#description}}, Meta=(ToolTip="{{{description}}}"){{/description}})
 	{{^required}}TOptional<{{/required}}{{{dataType}}}{{^required}}>{{/required}} {{paramName}}{{#required}}{{#defaultValue}} = {{{defaultValue}}}{{/defaultValue}}{{/required}};
 	{{/isEnum}}
     {{/allParams}}
@@ -64,8 +64,16 @@ class U{{operationIdCamelCase}}HelperLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 public:
+	/**
+	* Make {{nickname}} Request Struct
+	{{#allParams}}{{#description}}* @param {{paramName}} - {{{description}}}
+	{{/description}}{{/allParams}}*/
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Make {{nickname}} Request Struct"))
 	static F{{operationIdCamelCase}}Request MakeRequest({{#allParams}}{{dataType}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+	/**
+	* Break {{nickname}} Request Struct
+	{{#allParams}}{{#description}}* @param {{paramName}} - {{{description}}}
+	{{/description}}{{/allParams}}*/	
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Break {{nickname}} Request Struct"))
 	static void BreakRequest(const F{{operationIdCamelCase}}Request& InRequest{{#allParams}}, {{dataType}}& {{paramName}}{{/allParams}});
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Make {{nickname}} Response Struct"))

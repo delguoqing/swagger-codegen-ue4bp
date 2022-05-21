@@ -42,7 +42,7 @@ public:
 	{{/isEnum}}
 	{{^isEnum}}
 	{{#description}}/* {{{description}}} */
-	{{/description}}UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	{{/description}}UPROPERTY(BlueprintReadWrite, EditAnywhere{{#description}}, Meta=(ToolTip="{{{description}}}"){{/description}})
 	{{^required}}TOptional<{{/required}}{{{datatype}}}{{^required}}>{{/required}} {{name}}{{#required}}{{#defaultValue}} = {{{defaultValue}}}{{/defaultValue}}{{/required}};
 	{{/isEnum}}
     {{/vars}}
@@ -53,8 +53,16 @@ class U{{classname}}HelperLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 public:
+	/**
+	* Make {{name}} Struct
+	{{#vars}}{{#description}}* @param {{name}} - {{{description}}}
+	{{/description}}{{/vars}}*/
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Make {{name}} Struct"))
-	static {{classname}} Make({{#vars}}{{datatype}} {{name}}{{#hasMore}},{{/hasMore}}{{/vars}});
+	static {{classname}} Make({{#vars}}{{datatype}} {{name}}{{#hasMore}}, {{/hasMore}}{{/vars}});
+	/**
+	* Break {{name}} Struct
+	{{#vars}}{{#description}}* @param {{name}} - {{{description}}}
+	{{/description}}{{/vars}}*/
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Break {{name}} Struct"))
 	static void Break(const {{classname}}& {{classVarName}}{{#vars}}, {{datatype}}& {{name}}{{/vars}});
 };
