@@ -3,7 +3,7 @@
 
 #include "CoreUObject.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "{{modelNamePrefix}}BaseModel.h"
+#include "SwaggerBaseModel.h"
 {{#imports}}{{{import}}}
 {{/imports}}
 
@@ -17,7 +17,7 @@
  * {{description}}
  */
 USTRUCT(BlueprintType, Category={{unrealModuleName}}, meta=(DisplayName="{{name}}", HasNativeBreak="{{unrealModuleName}}.{{classname}}HelperLibrary.Break", HasNativeMake="{{unrealModuleName}}.{{classname}}HelperLibrary.Make"))
-struct {{dllapi}} {{classname}} : public F{{modelNamePrefix}}BaseModel
+struct {{dllapi}} {{classname}} : public FSwaggerBaseModel
 {
 
 	GENERATED_BODY()

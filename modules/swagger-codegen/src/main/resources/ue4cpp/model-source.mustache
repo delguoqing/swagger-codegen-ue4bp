@@ -3,7 +3,7 @@
 {{#models}}{{#model}}
 #include "{{classFilename}}.h"
 #include "{{unrealModuleName}}Module.h"
-#include "{{modelNamePrefix}}Helpers.h"
+#include "SwaggerHelpers.h"
 
 #include "Templates/SharedPointer.h"
 
@@ -56,18 +56,18 @@ inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, {{classname
 
 {{/isEnum}}
 {{^isEnum}}
-using {{cppNamespace}}::WriteJsonValue;
-using {{cppNamespace}}::TryGetJsonValue;
+using SwaggerCommon::WriteJsonValue;
+using SwaggerCommon::TryGetJsonValue;
 {{/isEnum}}
 {{/vars}}
 {{^vars}}
-using {{cppNamespace}}::WriteJsonValue;
-using {{cppNamespace}}::TryGetJsonValue;
+using SwaggerCommon::WriteJsonValue;
+using SwaggerCommon::TryGetJsonValue;
 {{/vars}}
 {{/hasEnums}}
 {{^hasEnums}}
-using {{cppNamespace}}::WriteJsonValue;
-using {{cppNamespace}}::TryGetJsonValue;
+using SwaggerCommon::WriteJsonValue;
+using SwaggerCommon::TryGetJsonValue;
 {{/hasEnums}}
 
 void {{classname}}::WriteJson(JsonWriter& Writer) const

@@ -1,7 +1,7 @@
 {{>licenseInfo}}
-#include "{{modelNamePrefix}}BaseModel.h"
+#include "SwaggerBaseModel.h"
 
-void F{{modelNamePrefix}}BaseResponse::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
+void FSwaggerBaseResponse::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
 {
     ResponseCode = InHttpResponseCode;
     SetSuccessful(EHttpResponseCodes::IsOk(InHttpResponseCode));

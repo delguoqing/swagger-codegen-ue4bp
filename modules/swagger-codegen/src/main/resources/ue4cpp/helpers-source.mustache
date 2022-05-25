@@ -1,16 +1,14 @@
 {{>licenseInfo}}
-#include "{{modelNamePrefix}}Helpers.h"
+#include "SwaggerHelpers.h"
 
-#include "{{unrealModuleName}}Module.h"
+#include "SwaggerCommonModule.h"
 
 #include "Interfaces/IHttpRequest.h"
 #include "PlatformHttp.h"
 #include "Misc/FileHelper.h"
 
-{{#cppNamespaceDeclarations}}
-namespace {{this}} 
+namespace SwaggerCommon
 {
-{{/cppNamespaceDeclarations}}
 
 HttpFileInput::HttpFileInput(const TCHAR* InFilePath)
 {
@@ -73,7 +71,7 @@ void HttpMultipartFormData::SetupHttpRequest(const TSharedRef<IHttpRequest, ESPM
 {
 	if(HttpRequest->GetVerb() != TEXT("POST"))
 	{
-		UE_LOG(Log{{unrealModuleName}}, Error, TEXT("Expected POST verb when using multipart form data"));
+		UE_LOG(LogSwaggerCommon, Error, TEXT("Expected POST verb when using multipart form data"));
 	}
 
 	// Append final boundary
@@ -153,7 +151,7 @@ void HttpMultipartFormData::AddFilePart(const TCHAR* Name, const HttpFileInput& 
 	TArray<uint8> FileContents;
 	if (!FFileHelper::LoadFileToArray(FileContents, *File.GetFilePath()))
 	{
-		UE_LOG(Log{{unrealModuleName}}, Error, TEXT("Failed to load file (%s)"), *File.GetFilePath());
+		UE_LOG(LogSwaggerCommon, Error, TEXT("Failed to load file (%s)"), *File.GetFilePath());
 		return;
 	}
 
@@ -182,6 +180,4 @@ void HttpMultipartFormData::AppendString(const TCHAR* Str)
 	FormData.Append((uint8*)utf8Str.Get(), utf8Str.Length());
 }
 
-{{#cppNamespaceDeclarations}}
 }
-{{/cppNamespaceDeclarations}}

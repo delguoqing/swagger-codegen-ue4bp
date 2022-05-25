@@ -3,9 +3,9 @@ using System;
 using System.IO;
 using UnrealBuildTool;
 
-public class {{unrealModuleName}} : ModuleRules
+public class SwaggerCommon : ModuleRules
 {
-    public {{unrealModuleName}}(ReadOnlyTargetRules Target) : base(Target)
+    public SwaggerCommon(ReadOnlyTargetRules Target) : base(Target)
     {
         PublicDependencyModuleNames.AddRange(
             new string[]
@@ -15,7 +15,6 @@ public class {{unrealModuleName}} : ModuleRules
                 "Json",
                 "CoreUObject",
                 "Engine",
-                "SwaggerCommon"
             }
         );
     }

@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "{{modelNamePrefix}}BaseModel.h"
+#include "SwaggerBaseModel.h"
 
 {{#imports}}{{{import}}}
 {{/imports}}
@@ -15,7 +15,7 @@
  * {{notes}}{{/notes}}
 */
 USTRUCT(BlueprintType, Category={{unrealModuleName}}, meta=(DisplayName="{{nickname}}Request", HasNativeBreak="{{unrealModuleName}}.{{operationIdCamelCase}}HelperLibrary.BreakRequest", HasNativeMake="{{unrealModuleName}}.{{operationIdCamelCase}}HelperLibrary.MakeRequest"))
-struct {{dllapi}} F{{operationIdCamelCase}}Request : public F{{modelNamePrefix}}BaseRequest
+struct {{dllapi}} F{{operationIdCamelCase}}Request : public FSwaggerBaseRequest
 {
 	GENERATED_BODY()
 public:
@@ -45,7 +45,7 @@ public:
 };
 
 USTRUCT(BlueprintType, Category={{unrealModuleName}}, meta=(DisplayName="{{nickname}}Response", HasNativeBreak="{{unrealModuleName}}.{{operationIdCamelCase}}HelperLibrary.BreakResponse", HasNativeMake="{{unrealModuleName}}.{{operationIdCamelCase}}HelperLibrary.MakeResponse"))
-struct {{dllapi}} F{{operationIdCamelCase}}Response : public F{{modelNamePrefix}}BaseResponse
+struct {{dllapi}} F{{operationIdCamelCase}}Response : public FSwaggerBaseResponse
 {
 	GENERATED_BODY()
 public:
@@ -80,7 +80,8 @@ public:
 	static F{{operationIdCamelCase}}Response MakeResponse(bool Successful, int32 ResponseCode, FString ResponseString{{#returnType}}, {{{returnType}}} Content{{/returnType}});
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Break {{nickname}} Response Struct"))
 	static void BreakResponse(const F{{operationIdCamelCase}}Response& InResponse, bool& Successful, int32& ResponseCode, FString& ResponseString{{#returnType}}, {{{returnType}}}& Content{{/returnType}});
-
+	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Get {{nickname}} Response Header"))
+	static FString GetResponseHeader(const F{{operationIdCamelCase}}Response& InResponse, const FString& HeaderName);
 };
 {{/operation}}
 {{/operations}}

@@ -1,0 +1,15 @@
+{{>licenseInfo}}
+#pragma once
+
+#include "Modules/ModuleInterface.h"
+#include "Modules/ModuleManager.h"
+#include "Logging/LogMacros.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(LogSwaggerCommon, Log, All);
+
+class SWAGGERCOMMON_API SwaggerCommonModule : public IModuleInterface
+{
+public:
+	void StartupModule() final;
+	void ShutdownModule() final;
+};

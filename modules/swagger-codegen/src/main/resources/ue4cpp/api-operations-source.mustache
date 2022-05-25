@@ -2,14 +2,14 @@
 #include "{{classFilename}}Operations.h"
 
 #include "{{unrealModuleName}}Module.h"
-#include "{{modelNamePrefix}}Helpers.h"
+#include "SwaggerHelpers.h"
 
 #include "Dom/JsonObject.h"
 #include "Templates/SharedPointer.h"
 #include "HttpModule.h"
 #include "PlatformHttp.h"
 
-using namespace {{cppNamespace}};
+using namespace SwaggerCommon;
 
 {{#operations}}{{#operation}}
 {{#allParams}}
@@ -252,7 +252,7 @@ void F{{operationIdCamelCase}}Request::SetupHttpRequest(const TSharedRef<IHttpRe
 {{#responses.0}}
 void F{{operationIdCamelCase}}Response::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
 {
-	F{{modelNamePrefix}}BaseResponse::SetHttpResponseCode(InHttpResponseCode);
+	FSwaggerBaseResponse::SetHttpResponseCode(InHttpResponseCode);
 	switch ((int)InHttpResponseCode)
 	{
 	{{#responses}}
@@ -306,4 +306,10 @@ void U{{operationIdCamelCase}}HelperLibrary::BreakResponse(const F{{operationIdC
 	ResponseString = InResponse.ResponseString;
 	{{#returnType}}Content = InResponse.Content;{{/returnType}}
 }
+
+FString U{{operationIdCamelCase}}HelperLibrary::GetResponseHeader(const F{{operationIdCamelCase}}Response& InResponse, const FString& HeaderName)
+{
+	return InResponse.GetHeader(HeaderName);
+}
+
 {{/operation}}{{/operations}}

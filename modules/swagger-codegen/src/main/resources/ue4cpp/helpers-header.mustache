@@ -1,7 +1,7 @@
 {{>licenseInfo}}
 #pragma once
 
-#include "{{modelNamePrefix}}BaseModel.h"
+#include "SwaggerBaseModel.h"
 
 #include "Serialization/JsonSerializer.h"
 #include "Dom/JsonObject.h"
@@ -9,16 +9,14 @@
 
 class IHttpRequest;
 
-{{#cppNamespaceDeclarations}}
-namespace {{cppNamespace}} 
+namespace SwaggerCommon
 {
-{{/cppNamespaceDeclarations}}
 
 typedef TSharedRef<TJsonWriter<>> JsonWriter;
 
 //////////////////////////////////////////////////////////////////////////
 
-class {{dllapi}} HttpFileInput
+class SWAGGERCOMMON_API HttpFileInput
 {
 public:
 	HttpFileInput(const TCHAR* InFilePath);
@@ -48,7 +46,7 @@ private:
 
 //////////////////////////////////////////////////////////////////////////
 
-class HttpMultipartFormData
+class SWAGGERCOMMON_API HttpMultipartFormData
 {
 public:
 	void SetBoundary(const TCHAR* InBoundary);
@@ -109,7 +107,7 @@ inline FStringFormatArg ToStringFormatArg(const TArray<uint8>& Value)
 	return FStringFormatArg(Base64UrlEncode(Value));
 }
 
-template<typename T, typename std::enable_if<!std::is_base_of<F{{modelNamePrefix}}BaseModel, T>::value, int>::type = 0>
+template<typename T, typename std::enable_if<!std::is_base_of<FSwaggerBaseModel, T>::value, int>::type = 0>
 inline FString ToString(const T& Value)
 {
 	return FString::Format(TEXT("{0}"), { ToStringFormatArg(Value) });
@@ -125,7 +123,7 @@ inline FString ToString(const TArray<uint8>& Value)
 	return Base64UrlEncode(Value);
 }
 
-inline FString ToString(const F{{modelNamePrefix}}BaseModel& Value)
+inline FString ToString(const FSwaggerBaseModel& Value)
 {
 	FString String;
 	JsonWriter Writer = TJsonWriterFactory<>::Create(&String);
@@ -196,7 +194,7 @@ inline FString CollectionToUrlString_multi(const TArray<T>& Collection, const TC
 
 //////////////////////////////////////////////////////////////////////////
 
-template<typename T, typename std::enable_if<!std::is_base_of<F{{modelNamePrefix}}BaseModel, T>::value, int>::type = 0>
+template<typename T, typename std::enable_if<!std::is_base_of<FSwaggerBaseModel, T>::value, int>::type = 0>
 inline void WriteJsonValue(JsonWriter& Writer, const T& Value)
 {
 	Writer->WriteValue(Value);
@@ -207,7 +205,7 @@ inline void WriteJsonValue(JsonWriter& Writer, const FDateTime& Value)
 	Writer->WriteValue(Value.ToIso8601());
 }
 
-inline void WriteJsonValue(JsonWriter& Writer, const F{{modelNamePrefix}}BaseModel& Value)
+inline void WriteJsonValue(JsonWriter& Writer, const FSwaggerBaseModel& Value)
 {
 	Value.WriteJson(Writer);
 }
@@ -316,7 +314,7 @@ inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, bool& Value
 		return false;
 }
 
-template<typename T, typename std::enable_if<!std::is_base_of<F{{modelNamePrefix}}BaseModel, T>::value, int>::type = 0>
+template<typename T, typename std::enable_if<!std::is_base_of<FSwaggerBaseModel, T>::value, int>::type = 0>
 inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, T& Value)
 {
 	T TmpValue;
@@ -329,7 +327,7 @@ inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, T& Value)
 		return false;
 }
 
-inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, F{{modelNamePrefix}}BaseModel& Value)
+inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, FSwaggerBaseModel& Value)
 {
 	const TSharedPtr<FJsonObject>* Object;
 	if (JsonValue->TryGetObject(Object))
@@ -400,6 +398,4 @@ inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, TArray<uint
 		return false;
 }
 
-{{#cppNamespaceDeclarations}}
 }
-{{/cppNamespaceDeclarations}}

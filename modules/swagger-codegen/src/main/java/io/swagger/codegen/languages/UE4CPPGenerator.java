@@ -45,6 +45,11 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
     // source folder where to write the files
     protected String privateFolder = "Private";
     protected String publicFolder = "Public";
+    // shared module name
+    protected String commonModuleName = "SwaggerCommon";
+    protected String commonFolder = ".." + File.separator + commonModuleName;
+    protected String commonPrivateFolder = commonFolder + File.separator + privateFolder;
+    protected String commonPublicFolder = commonFolder + File.separator + publicFolder;
     protected String apiVersion = "1.0.0";
     protected Map<String, String> namespaces = new HashMap<String, String>();
     // Will be included using the <> syntax, not used in Unreal's coding convention
@@ -53,7 +58,6 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
     protected boolean optionalProjectFileFlag = true;
     protected boolean shortPathAsOperationIdFallback = false;
     
-
     public UE4CPPGenerator() {
         super();
 
@@ -149,14 +153,20 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
                         "TSharedPtr<FJsonObject>")
         );
 
-        supportingFiles.add(new SupportingFile("model-base-header.mustache", publicFolder, modelNamePrefix + "BaseModel.h"));
-        supportingFiles.add(new SupportingFile("model-base-source.mustache", privateFolder, modelNamePrefix + "BaseModel.cpp"));
-        supportingFiles.add(new SupportingFile("helpers-header.mustache", publicFolder, modelNamePrefix + "Helpers.h"));
-        supportingFiles.add(new SupportingFile("helpers-source.mustache", privateFolder, modelNamePrefix + "Helpers.cpp"));
+        // Put those files into common directory, so that if we have multiple apis generated, we can share code.
+        supportingFiles.add(new SupportingFile("model-base-header.mustache", commonPublicFolder, "SwaggerBaseModel.h"));
+        supportingFiles.add(new SupportingFile("model-base-source.mustache", commonPrivateFolder, "SwaggerBaseModel.cpp"));
+        supportingFiles.add(new SupportingFile("helpers-header.mustache", commonPublicFolder, "SwaggerHelpers.h"));
+        supportingFiles.add(new SupportingFile("helpers-source.mustache", commonPrivateFolder, "SwaggerHelpers.cpp"));
+
         if (optionalProjectFileFlag) {
             supportingFiles.add(new SupportingFile("Build.cs.mustache", unrealModuleName + ".Build.cs"));
             supportingFiles.add(new SupportingFile("module-header.mustache", privateFolder, unrealModuleName + "Module.h"));
             supportingFiles.add(new SupportingFile("module-source.mustache", privateFolder, unrealModuleName + "Module.cpp"));
+
+            supportingFiles.add(new SupportingFile("common-Build.cs.mustache", commonFolder, commonModuleName + ".Build.cs"));
+            supportingFiles.add(new SupportingFile("common-module-header.mustache", commonPrivateFolder, commonModuleName + "Module.h"));
+            supportingFiles.add(new SupportingFile("common-module-source.mustache", commonPrivateFolder, commonModuleName + "Module.cpp"));
         }
 
         super.typeMapping = new HashMap<String, String>();
@@ -229,14 +239,18 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
         if(updateSupportingFiles) {
             supportingFiles.clear();
 
-            supportingFiles.add(new SupportingFile("model-base-header.mustache", publicFolder, modelNamePrefix + "BaseModel.h"));
-            supportingFiles.add(new SupportingFile("model-base-source.mustache", privateFolder, modelNamePrefix + "BaseModel.cpp"));
-            supportingFiles.add(new SupportingFile("helpers-header.mustache", publicFolder, modelNamePrefix + "Helpers.h"));
-            supportingFiles.add(new SupportingFile("helpers-source.mustache", privateFolder, modelNamePrefix + "Helpers.cpp"));
+            supportingFiles.add(new SupportingFile("model-base-header.mustache", commonPublicFolder, "SwaggerBaseModel.h"));
+            supportingFiles.add(new SupportingFile("model-base-source.mustache", commonPrivateFolder, "SwaggerBaseModel.cpp"));
+            supportingFiles.add(new SupportingFile("helpers-header.mustache", commonPublicFolder, "SwaggerHelpers.h"));
+            supportingFiles.add(new SupportingFile("helpers-source.mustache", commonPrivateFolder, "SwaggerHelpers.cpp"));
             if (optionalProjectFileFlag) {
                 supportingFiles.add(new SupportingFile("Build.cs.mustache", unrealModuleName + ".Build.cs"));
                 supportingFiles.add(new SupportingFile("module-header.mustache", privateFolder, unrealModuleName + "Module.h"));
                 supportingFiles.add(new SupportingFile("module-source.mustache", privateFolder, unrealModuleName + "Module.cpp"));
+
+                supportingFiles.add(new SupportingFile("common-Build.cs.mustache", commonFolder, commonModuleName + ".Build.cs"));
+                supportingFiles.add(new SupportingFile("common-module-header.mustache", commonPrivateFolder, commonModuleName + "Module.h"));
+                supportingFiles.add(new SupportingFile("common-module-source.mustache", commonPrivateFolder, commonModuleName + "Module.cpp"));
             }
 
             importMapping.put("HttpFileInput", "#include \"" + modelNamePrefix + "Helpers.h\"");

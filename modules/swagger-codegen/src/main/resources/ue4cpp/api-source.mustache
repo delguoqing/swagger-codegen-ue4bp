@@ -40,7 +40,7 @@ bool {{classname}}::IsValid() const
 	return true;
 }
 
-void {{classname}}::HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceeded, F{{modelNamePrefix}}BaseResponse& InOutResponse) const
+void {{classname}}::HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceeded, FSwaggerBaseResponse& InOutResponse) const
 {
 	InOutResponse.SetHttpResponse(HttpResponse);
 	InOutResponse.SetSuccessful(bSucceeded);
