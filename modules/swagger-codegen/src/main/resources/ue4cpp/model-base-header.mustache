@@ -27,7 +27,7 @@ struct SWAGGERCOMMON_API FSwaggerBaseRequest
 public:
 	virtual ~FSwaggerBaseRequest() {}
 	virtual void SetupHttpRequest(const TSharedRef<IHttpRequest, ESPMode::ThreadSafe>& HttpRequest) const {}
-	virtual FString ComputePath() { return FString(); }
+	virtual FString ComputePath() const { return FString(); }
 };
 
 USTRUCT(BlueprintType)

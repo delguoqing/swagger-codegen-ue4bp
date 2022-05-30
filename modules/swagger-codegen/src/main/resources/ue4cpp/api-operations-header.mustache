@@ -20,8 +20,8 @@ struct {{dllapi}} F{{operationIdCamelCase}}Request : public FSwaggerBaseRequest
 	GENERATED_BODY()
 public:
     virtual ~F{{operationIdCamelCase}}Request() {}
-	void SetupHttpRequest(const TSharedRef<IHttpRequest,  ESPMode::ThreadSafe>& HttpRequest) const;
-	FString ComputePath() const;
+	virtual void SetupHttpRequest(const TSharedRef<IHttpRequest,  ESPMode::ThreadSafe>& HttpRequest) const;
+	virtual FString ComputePath() const;
     
 	{{#allParams}}
 	{{#isEnum}}
