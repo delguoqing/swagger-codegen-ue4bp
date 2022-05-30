@@ -51,12 +51,14 @@ struct {{dllapi}} F{{operationIdCamelCase}}Response : public FSwaggerBaseRespons
 public:
     virtual ~F{{operationIdCamelCase}}Response() {}
 	{{#responses.0}}
-	void SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode) final;
+	virtual void SetHttpResponseCode(int InHttpResponseCode) final;
 	{{/responses.0}}
 	bool FromJson(const TSharedPtr<FJsonValue>& JsonObject) final;
     
+	{{#responses}}
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-    {{#returnType}}{{{returnType}}} Content;{{/returnType}}
+    {{dataType}} Content{{^isDefault}}{{code}}{{/isDefault}};
+	{{/responses}}
 };
 
 UCLASS(NotBlueprintType)
@@ -79,7 +81,7 @@ public:
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Make {{nickname}} Response Struct"))
 	static F{{operationIdCamelCase}}Response MakeResponse(bool Successful, int32 ResponseCode, FString ResponseString{{#returnType}}, {{{returnType}}} Content{{/returnType}});
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Break {{nickname}} Response Struct"))
-	static void BreakResponse(const F{{operationIdCamelCase}}Response& InResponse, bool& Successful, int32& ResponseCode, FString& ResponseString{{#returnType}}, {{{returnType}}}& Content{{/returnType}});
+	static void BreakResponse(const F{{operationIdCamelCase}}Response& InResponse, bool& Successful, int32& ResponseCode, FString& ResponseString{{#responses}}, {{{dataType}}}& Content{{^isDefault}}{{code}}{{/isDefault}}{{/responses}});
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Get {{nickname}} Response Header"))
 	static FString GetResponseHeader(const F{{operationIdCamelCase}}Response& InResponse, const FString& HeaderName);
 };

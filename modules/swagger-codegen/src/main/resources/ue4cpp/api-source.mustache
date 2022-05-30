@@ -47,7 +47,7 @@ void {{classname}}::HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceede
 
 	if (bSucceeded && HttpResponse.IsValid())
 	{
-		InOutResponse.SetHttpResponseCode((EHttpResponseCodes::Type)HttpResponse->GetResponseCode());
+		InOutResponse.SetHttpResponseCode(HttpResponse->GetResponseCode());
 		FString ContentType = HttpResponse->GetContentType();
 		FString Content;
 

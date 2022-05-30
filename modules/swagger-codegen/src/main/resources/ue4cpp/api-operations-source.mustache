@@ -269,12 +269,14 @@ void F{{operationIdCamelCase}}Response::SetHttpResponseCode(int InHttpResponseCo
 
 bool F{{operationIdCamelCase}}Response::FromJson(const TSharedPtr<FJsonValue>& JsonValue)
 {
-	{{#returnType}}
-	return TryGetJsonValue(JsonValue, Content);
-	{{/returnType}}
-	{{^returnType}}
-	return true;
-	{{/returnType}}
+	switch (GetHttpResponseCode())
+	{
+	{{#responses}}
+	case {{code}}: 
+		return TryGetJsonValue(JsonValue, Content{{^isDefault}}{{code}}{{/isDefault}});
+	{{/responses}}
+	}
+	return false;
 }
 
 void U{{operationIdCamelCase}}HelperLibrary::BreakRequest(const F{{operationIdCamelCase}}Request& InRequest{{#allParams}}, {{dataType}}& Out{{paramName}}{{/allParams}})
@@ -299,12 +301,14 @@ F{{operationIdCamelCase}}Response U{{operationIdCamelCase}}HelperLibrary::MakeRe
 	return _OutResponse;
 }
 
-void U{{operationIdCamelCase}}HelperLibrary::BreakResponse(const F{{operationIdCamelCase}}Response& InResponse, bool& Successful, int32& ResponseCode, FString& ResponseString{{#returnType}}, {{{returnType}}}& Content{{/returnType}})
+void U{{operationIdCamelCase}}HelperLibrary::BreakResponse(const F{{operationIdCamelCase}}Response& InResponse, bool& Successful, int32& ResponseCode, FString& ResponseString{{#responses}}, {{{dataType}}}& Content{{^isDefault}}{{code}}{{/isDefault}}{{/responses}})
 {
 	Successful = InResponse.Successful;
 	ResponseCode = InResponse.ResponseCode;
 	ResponseString = InResponse.ResponseString;
-	{{#returnType}}Content = InResponse.Content;{{/returnType}}
+	{{#responses}}
+	Content{{^isDefault}}{{code}}{{/isDefault}} = InResponse.Content{{^isDefault}}{{code}}{{/isDefault}};
+	{{/responses}}
 }
 
 FString U{{operationIdCamelCase}}HelperLibrary::GetResponseHeader(const F{{operationIdCamelCase}}Response& InResponse, const FString& HeaderName)
