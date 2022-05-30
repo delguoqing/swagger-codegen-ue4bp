@@ -573,6 +573,9 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
             for (CodegenParameter p : op1.allParams) {
                 p.required = true;
             }
+            for (CodegenParameter p: op1.headerParams) {
+                p.required = true;
+            }
         }
 
         // setup nickname for operations (used as DisplayName)
