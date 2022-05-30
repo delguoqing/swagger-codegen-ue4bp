@@ -41,8 +41,8 @@ public:
 	void SetSuccessful(bool InSuccessful) { Successful = InSuccessful; }
 	bool IsSuccessful() const { return Successful; }
 
-	virtual void SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode);
-	EHttpResponseCodes::Type GetHttpResponseCode() const { return (EHttpResponseCodes::Type)ResponseCode; }
+	virtual void SetHttpResponseCode(int InHttpResponseCode);
+	int GetHttpResponseCode() const { return ResponseCode; }
 
 	void SetResponseString(const FString& InResponseString) { ResponseString = InResponseString; }
 	const FString& GetResponseString() const { return ResponseString; }
@@ -56,7 +56,7 @@ public:
 			return FString();
 		return HttpResponse->GetHeader(HeaderName);
 	}
-	
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool Successful;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

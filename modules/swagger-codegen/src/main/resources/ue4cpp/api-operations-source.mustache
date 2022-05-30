@@ -250,10 +250,10 @@ void F{{operationIdCamelCase}}Request::SetupHttpRequest(const TSharedRef<IHttpRe
 }
 
 {{#responses.0}}
-void F{{operationIdCamelCase}}Response::SetHttpResponseCode(EHttpResponseCodes::Type InHttpResponseCode)
+void F{{operationIdCamelCase}}Response::SetHttpResponseCode(int InHttpResponseCode)
 {
 	FSwaggerBaseResponse::SetHttpResponseCode(InHttpResponseCode);
-	switch ((int)InHttpResponseCode)
+	switch (InHttpResponseCode)
 	{
 	{{#responses}}
 	case {{code}}:

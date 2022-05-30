@@ -177,7 +177,7 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
         typeMapping.put("integer", "int32");
         typeMapping.put("long", "int64");
         typeMapping.put("float", "float");
-        typeMapping.put("number", "double");
+        typeMapping.put("number", "float"); // BP doesn't support double!
         typeMapping.put("double", "double");
         typeMapping.put("string", "FString");
         typeMapping.put("byte", "uint8");

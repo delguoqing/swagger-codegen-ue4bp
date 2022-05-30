@@ -101,12 +101,12 @@ bool {{classname}}::FromJson(const TSharedPtr<FJsonObject>& JsonObject)
 	return ParseSuccess;
 }
 
-void U{{classname}}HelperLibrary::Break(const {{classname}}& {{classVarName}}{{#vars}}, {{datatype}}& Out{{name}}{{/vars}})
+void U{{classname}}HelperLibrary::Break(const {{classname}}& {{classVarName}}{{#vars}}, {{{datatype}}}& Out{{name}}{{/vars}})
 {
 	{{#vars}}Out{{name}} = {{classVarName}}.{{name}};{{/vars}}
 }
 
-{{classname}} U{{classname}}HelperLibrary::Make({{#vars}}{{datatype}} {{name}}{{#hasMore}}, {{/hasMore}}{{/vars}})
+{{classname}} U{{classname}}HelperLibrary::Make({{#vars}}{{{datatype}}} {{name}}{{#hasMore}}, {{/hasMore}}{{/vars}})
 {
 	{{classname}} {{classVarName}};
 	{{#vars}}{{classVarName}}.{{name}} = {{name}};{{/vars}}
