@@ -83,7 +83,7 @@ void {{classname}}::HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceede
 
 {{#operations}}
 {{#operation}}
-bool {{classname}}::{{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request{{#responses}}, const F{{dataType}}Delegate& Delegate{{code}} /*= F{{dataType}}Delegate()*/{/responses})
+bool {{classname}}::{{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request{{#responses}}, const F{{dataType}}Delegate& Delegate{{code}} /*= F{{dataType}}Delegate()*/{{/responses}})
 {
 	if (!IsValid())
 		return false;
