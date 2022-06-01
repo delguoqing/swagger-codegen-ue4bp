@@ -304,6 +304,8 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
 
     @Override
     public String toModelImport(String name) {
+        name = name.substring(1);   // removing "F"
+
         if (namespaces.containsKey(name)) {
             return "using " + namespaces.get(name) + ";";
         } else if (systemIncludes.contains(name)) {
@@ -772,11 +774,14 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
         ArrayList<HashMap<String, String>> rspTypes = new ArrayList<HashMap<String, String>>();
         for (String dataType: uniqueRsps.keySet()) {
             HashMap<String, String> item = new HashMap<String, String>();
-            item.put("dataType", dataType);
+            item.put("dataType", dataType);     // dataType for `Content`
+            boolean isModel = modelImportPaths.containsKey(dataType);
+            String baseName = isModel ? dataType.substring(1) : dataType;    // removing "F"
+            item.put("classname", sanitizeName(baseName));  // Response class which holds the Content can use it
+
             item.put("varName", sanitizeName(dataType));
             item.put("nickname", sanitizeName(dataType));
-            item.put("classname", sanitizeName(dataType));
-            if (modelImportPaths.containsKey(dataType)) {
+            if (isModel) {
                 item.put("importPath", modelImportPaths.get(dataType));
             }
             rspTypes.add(item);
