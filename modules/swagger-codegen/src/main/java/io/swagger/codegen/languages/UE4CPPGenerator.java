@@ -525,7 +525,10 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
             return type;
         } else {
             type = sanitizeName(type);
-            return modelNamePrefix + Character.toUpperCase(type.charAt(0)) + type.substring(1);
+            // We have no choice but adding "F" here. For complex types, like:
+            // TMap<FString, ModelType> BorrowedCards;
+            // we have no way to add F for ModelType from within the template
+            return "F" + modelNamePrefix + Character.toUpperCase(type.charAt(0)) + type.substring(1);
         }
     }
 
