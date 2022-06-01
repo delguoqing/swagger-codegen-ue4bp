@@ -587,7 +587,7 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
                 p.required = true;
             }
             for (CodegenResponse r: op1.responses) {
-                r.name = sanitizeName(r.dataType);
+                r.name = r.primitiveType ? sanitizeName(r.dataType) : sanitizeName(r.dataType.substring(1));
             }
         }
 
