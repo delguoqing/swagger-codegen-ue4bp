@@ -1,0 +1,43 @@
+{{>licenseInfo}}
+#pragma once
+
+#include "Kismet/BlueprintFunctionLibrary.h"
+#include "SwaggerBaseModel.h"
+{{#responseTypes}}{{#importPath}}{{{importPath}}}
+{{/importPath}}{{/responseTypes}}
+#include "{{unrealModuleName}}Responses.generated.h"
+
+{{#responseTypes}}
+USTRUCT(BlueprintType, Category={{unrealModuleName}}, meta=(DisplayName="{{nickname}} Response", HasNativeBreak="{{unrealModuleName}}.{{classname}}ResponseHelperLibrary.Break", HasNativeMake="{{unrealModuleName}}.{{className}}ResponseHelperLibrary.Make"))
+struct {{dllapi}} F{{classname}}Response : public FSwaggerBaseResponse
+{
+	GENERATED_BODY()
+public:
+    virtual ~F{{classname}}Response() {}
+	bool FromJson(const TSharedPtr<FJsonValue>& JsonObject) final;
+    
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+    {{{dataType}}} Content;
+};
+
+{{/responseTypes}}
+
+{{#responseTypes}}
+UCLASS(NotBlueprintType)
+class U{{classname}}ResponseHelperLibrary : public UBlueprintFunctionLibrary
+{
+	GENERATED_BODY()
+public:
+	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Make {{nickname}} Response Struct"))
+	static F{{classname}}Response Make(bool Successful, int32 ResponseCode, FString ResponseString, {{{dataType}}} Content);
+	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Break {{nickname}} Response Struct"))
+	static void Break(const F{{classname}}Response& InResponse, bool& Successful, int32& ResponseCode, FString& ResponseString, {{{dataType}}}& Content);
+	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Get {{nickname}} Response Header"))
+	static FString GetHeader(const F{{classname}}Response& InResponse, const FString& HeaderName);
+};
+
+{{/responseTypes}}
+
+{{#responseTypes}}
+DECLARE_DYNAMIC_DELEGATE_OneParam(F{{classname}}Delegate}, const {{classname}}Response&, Response);
+{{/responseTypes}}

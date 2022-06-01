@@ -61,6 +61,9 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
     public UE4CPPGenerator() {
         super();
 
+        instantiationTypes.put("map", "TMap");
+        instantiationTypes.put("array", "TArray");
+
         // set the output folder here
         outputFolder = "generated-code/ue4cpp";
 
@@ -163,6 +166,9 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
             supportingFiles.add(new SupportingFile("Build.cs.mustache", unrealModuleName + ".Build.cs"));
             supportingFiles.add(new SupportingFile("module-header.mustache", privateFolder, unrealModuleName + "Module.h"));
             supportingFiles.add(new SupportingFile("module-source.mustache", privateFolder, unrealModuleName + "Module.cpp"));
+            supportingFiles.add(new SupportingFile("api-responses-header.mustache", publicFolder, unrealModuleName + "Responses.h"));
+            supportingFiles.add(new SupportingFile("api-responses-source.mustache", privateFolder, unrealModuleName + "Responses.cpp"));
+
 
             supportingFiles.add(new SupportingFile("common-Build.cs.mustache", commonFolder, commonModuleName + ".Build.cs"));
             supportingFiles.add(new SupportingFile("common-module-header.mustache", commonPrivateFolder, commonModuleName + "Module.h"));
@@ -247,6 +253,8 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
                 supportingFiles.add(new SupportingFile("Build.cs.mustache", unrealModuleName + ".Build.cs"));
                 supportingFiles.add(new SupportingFile("module-header.mustache", privateFolder, unrealModuleName + "Module.h"));
                 supportingFiles.add(new SupportingFile("module-source.mustache", privateFolder, unrealModuleName + "Module.cpp"));
+                supportingFiles.add(new SupportingFile("api-responses-header.mustache", publicFolder, unrealModuleName + "Responses.h"));
+                supportingFiles.add(new SupportingFile("api-responses-source.mustache", privateFolder, unrealModuleName + "Responses.cpp"));
 
                 supportingFiles.add(new SupportingFile("common-Build.cs.mustache", commonFolder, commonModuleName + ".Build.cs"));
                 supportingFiles.add(new SupportingFile("common-module-header.mustache", commonPrivateFolder, commonModuleName + "Module.h"));
@@ -305,9 +313,6 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
         String folder = modelPackage().replace("::", File.separator);
         if (!folder.isEmpty())
             folder += File.separator;
-
-        // remove leading "F"
-        if (name.startsWith("F")) name = name.substring(1);
 
         return "#include \"" + folder + name + ".h\"";
     }
@@ -520,7 +525,7 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
             return type;
         } else {
             type = sanitizeName(type);
-            return "F" + modelNamePrefix + Character.toUpperCase(type.charAt(0)) + type.substring(1);
+            return modelNamePrefix + Character.toUpperCase(type.charAt(0)) + type.substring(1);
         }
     }
 
@@ -575,6 +580,9 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
             }
             for (CodegenParameter p: op1.headerParams) {
                 p.required = true;
+            }
+            for (CodegenResponse r: op1.responses) {
+                r.name = sanitizeName(r.dataType);
             }
         }
 
@@ -675,6 +683,14 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
         return objs;
     }
 
+    // @Override
+    // Map<String, Object> postProcessOperationsWithModels(Map<String, Object> objs, List<Object> allModels)
+    // {
+        // remove unneccessary models
+        // if some model has parent, and its type is TMap or TArray, then we remove this model and use TMap/TArray instead
+        // if    
+    // }
+
     @Override
     public String toEnumVarName(String name, String datatype) {
         return toVarName(name);
@@ -720,5 +736,51 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
 
     public String toSetter(String name) {
         return "Set" + getterAndSetterCapitalize(name);
+    }
+
+    @Override
+    public Map<String, Object> postProcessSupportingFileData(Map<String, Object> objs) {
+        Map<String, CodegenResponse> uniqueRsps = new HashMap<String, CodegenResponse>();
+
+        Map<String, Object> apiInfo = (Map<String, Object>) objs.get("apiInfo");
+        List<Map<String, Object>> _apis = (List<Map<String, Object>>) apiInfo.get("apis");
+        for (Map<String, Object> _api: _apis) {
+            Map<String, Object> operations = (Map<String, Object>) _api.get("operations");
+            List<CodegenOperation> operationList = (List<CodegenOperation>) operations.get("operation");
+            for (CodegenOperation op: operationList) {
+                for (CodegenResponse rsp: op.responses) {
+                    uniqueRsps.put(rsp.dataType, rsp);
+                }
+            }
+        }
+
+        // cache dataType -> importPath
+        Map<String, String> modelImportPaths = new HashMap<String, String>();
+        List<Map<String, Object>> models = (List<Map<String, Object>>) objs.get("models");
+        for (Map<String, Object> model: models) {
+            String importPath = (String) model.get("importPath");
+            CodegenModel codegenModel = (CodegenModel) model.get("model");
+            String classname = codegenModel.classname;
+            modelImportPaths.put(classname, importPath);
+        }
+
+        List<String> imports = new ArrayList<String>();
+
+        ArrayList<HashMap<String, String>> rspTypes = new ArrayList<HashMap<String, String>>();
+        for (String dataType: uniqueRsps.keySet()) {
+            HashMap<String, String> item = new HashMap<String, String>();
+            item.put("dataType", dataType);
+            item.put("varName", sanitizeName(dataType));
+            item.put("nickname", sanitizeName(dataType));
+            item.put("classname", sanitizeName(dataType));
+            if (modelImportPaths.containsKey(dataType)) {
+                item.put("importPath", modelImportPaths.get(dataType));
+            }
+            rspTypes.add(item);
+        }
+
+        objs.put("responseTypes", rspTypes);
+
+        return objs;
     }
 }

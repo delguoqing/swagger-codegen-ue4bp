@@ -1,0 +1,38 @@
+{{>licenseInfo}}
+#pragma once
+
+#include "Kismet/BlueprintFunctionLibrary.h"
+#include "SwaggerBaseModel.h"
+#include "SwaggerHelpers.h"
+#include "{{unrealModuleName}}Responses.h"
+
+{{#responseTypes}}
+bool F{{classname}}Response::FromJson(const TSharedPtr<FJsonValue>& JsonObject) {
+    return TryGetJsonValue(JsonValue, Content);
+}
+{{/responseTypes}}
+
+{{#responseTypes}}
+F{{classname}}Response U{{classname}}ResponseHelperLibrary::::Make(bool Successful, int32 ResponseCode, FString ResponseString{{#dataType}}, {{{dataType}}} Content{{/dataType}})
+{
+	F{{classname}}Response _OutResponse;
+	_OutResponse.Successful = Successful;
+	_OutResponse.ResponseCode = ResponseCode;
+	_OutResponse.ResponseString = ResponseString;
+	{{#dataType}}_OutResponse.Content = Content;{{/dataType}}
+	return _OutResponse;
+}
+
+void U{{classname}}ResponseHelperLibrary::Break(const F{{classname}}Response& InResponse, bool& Successful, int32& ResponseCode, FString& ResponseString{{#dataType}}, {{{dataType}}}& Content{{/dataType}})
+{
+	Successful = InResponse.Successful;
+	ResponseCode = InResponse.ResponseCode;
+	ResponseString = InResponse.ResponseString;
+	{{#dataType}}Content = InResponse.Content;{{/dataType}}
+}
+
+FString U{{classname}}ResponseHelperLibrary::GetHeader(const F{{classname}}Response& InResponse, const FString& HeaderName)
+{
+	return InResponse.GetHeader(HeaderName);
+}
+{{/responseTypes}}

@@ -249,36 +249,6 @@ void F{{operationIdCamelCase}}Request::SetupHttpRequest(const TSharedRef<IHttpRe
 	}
 }
 
-{{#responses.0}}
-void F{{operationIdCamelCase}}Response::SetHttpResponseCode(int InHttpResponseCode)
-{
-	FSwaggerBaseResponse::SetHttpResponseCode(InHttpResponseCode);
-	switch (InHttpResponseCode)
-	{
-	{{#responses}}
-	case {{code}}:
-	{{#isDefault}}
-	default:
-	{{/isDefault}}
-		SetResponseString(TEXT("{{message}}"));
-		break;
-	{{/responses}}
-	}
-}
-{{/responses.0}}
-
-bool F{{operationIdCamelCase}}Response::FromJson(const TSharedPtr<FJsonValue>& JsonValue)
-{
-	switch (GetHttpResponseCode())
-	{
-	{{#responses}}
-	case {{code}}: 
-		return TryGetJsonValue(JsonValue, Content{{^isDefault}}{{code}}{{/isDefault}});
-	{{/responses}}
-	}
-	return false;
-}
-
 void U{{operationIdCamelCase}}HelperLibrary::BreakRequest(const F{{operationIdCamelCase}}Request& InRequest{{#allParams}}, {{dataType}}& Out{{paramName}}{{/allParams}})
 {
 	{{#vars}}Out{{name}} = InRequest.{{name}};{{/vars}}
@@ -289,31 +259,6 @@ F{{operationIdCamelCase}}Request U{{operationIdCamelCase}}HelperLibrary::MakeReq
 	F{{operationIdCamelCase}}Request _OutRequest;
 	{{#allParams}}_OutRequest.{{paramName}} = {{paramName}};{{/allParams}}
 	return _OutRequest;
-}
-
-F{{operationIdCamelCase}}Response U{{operationIdCamelCase}}HelperLibrary::MakeResponse(bool Successful, int32 ResponseCode, FString ResponseString{{#returnType}}, {{{returnType}}} Content{{/returnType}})
-{
-	F{{operationIdCamelCase}}Response _OutResponse;
-	_OutResponse.Successful = Successful;
-	_OutResponse.ResponseCode = ResponseCode;
-	_OutResponse.ResponseString = ResponseString;
-	{{#returnType}}_OutResponse.Content = Content;{{/returnType}}
-	return _OutResponse;
-}
-
-void U{{operationIdCamelCase}}HelperLibrary::BreakResponse(const F{{operationIdCamelCase}}Response& InResponse, bool& Successful, int32& ResponseCode, FString& ResponseString{{#responses}}, {{{dataType}}}& Content{{^isDefault}}{{code}}{{/isDefault}}{{/responses}})
-{
-	Successful = InResponse.Successful;
-	ResponseCode = InResponse.ResponseCode;
-	ResponseString = InResponse.ResponseString;
-	{{#responses}}
-	Content{{^isDefault}}{{code}}{{/isDefault}} = InResponse.Content{{^isDefault}}{{code}}{{/isDefault}};
-	{{/responses}}
-}
-
-FString U{{operationIdCamelCase}}HelperLibrary::GetResponseHeader(const F{{operationIdCamelCase}}Response& InResponse, const FString& HeaderName)
-{
-	return InResponse.GetHeader(HeaderName);
 }
 
 {{/operation}}{{/operations}}

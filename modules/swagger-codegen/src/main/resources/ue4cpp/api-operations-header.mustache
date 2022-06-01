@@ -44,23 +44,6 @@ public:
     {{/allParams}}
 };
 
-USTRUCT(BlueprintType, Category={{unrealModuleName}}, meta=(DisplayName="{{nickname}}Response", HasNativeBreak="{{unrealModuleName}}.{{operationIdCamelCase}}HelperLibrary.BreakResponse", HasNativeMake="{{unrealModuleName}}.{{operationIdCamelCase}}HelperLibrary.MakeResponse"))
-struct {{dllapi}} F{{operationIdCamelCase}}Response : public FSwaggerBaseResponse
-{
-	GENERATED_BODY()
-public:
-    virtual ~F{{operationIdCamelCase}}Response() {}
-	{{#responses.0}}
-	virtual void SetHttpResponseCode(int InHttpResponseCode) final;
-	{{/responses.0}}
-	bool FromJson(const TSharedPtr<FJsonValue>& JsonObject) final;
-    
-	{{#responses}}
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-    {{dataType}} Content{{^isDefault}}{{code}}{{/isDefault}};
-	{{/responses}}
-};
-
 UCLASS(NotBlueprintType)
 class U{{operationIdCamelCase}}HelperLibrary : public UBlueprintFunctionLibrary
 {
@@ -71,19 +54,13 @@ public:
 	{{#allParams}}{{#description}}* @param {{paramName}} - {{{description}}}
 	{{/description}}{{/allParams}}*/
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Make {{nickname}} Request Struct"))
-	static F{{operationIdCamelCase}}Request MakeRequest({{#allParams}}{{dataType}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+	static F{{operationIdCamelCase}}Request MakeRequest({{#allParams}}{{{dataType}}} {{paramName}}{{#hasMore}},{{/hasMore}}{{/allParams}});
 	/**
 	* Break {{nickname}} Request Struct
 	{{#allParams}}{{#description}}* @param {{paramName}} - {{{description}}}
 	{{/description}}{{/allParams}}*/	
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Break {{nickname}} Request Struct"))
-	static void BreakRequest(const F{{operationIdCamelCase}}Request& InRequest{{#allParams}}, {{dataType}}& {{paramName}}{{/allParams}});
-	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Make {{nickname}} Response Struct"))
-	static F{{operationIdCamelCase}}Response MakeResponse(bool Successful, int32 ResponseCode, FString ResponseString{{#returnType}}, {{{returnType}}} Content{{/returnType}});
-	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Break {{nickname}} Response Struct"))
-	static void BreakResponse(const F{{operationIdCamelCase}}Response& InResponse, bool& Successful, int32& ResponseCode, FString& ResponseString{{#responses}}, {{{dataType}}}& Content{{^isDefault}}{{code}}{{/isDefault}}{{/responses}});
-	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Get {{nickname}} Response Header"))
-	static FString GetResponseHeader(const F{{operationIdCamelCase}}Response& InResponse, const FString& HeaderName);
+	static void BreakRequest(const F{{operationIdCamelCase}}Request& InRequest{{#allParams}}, {{{dataType}}}& {{paramName}}{{/allParams}});
 };
 {{/operation}}
 {{/operations}}

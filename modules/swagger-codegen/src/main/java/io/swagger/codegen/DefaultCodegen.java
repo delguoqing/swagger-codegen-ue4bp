@@ -1042,6 +1042,7 @@ public class DefaultCodegen {
             MapProperty ap = (MapProperty) p;
             Property additionalProperties2 = ap.getAdditionalProperties();
             String type = additionalProperties2.getType();
+            System.out.println("instantationType = " + type);
             if (null == type) {
                 LOGGER.error("No Type defined for Additional Property " + additionalProperties2 + "\n" //
                         + "\tIn Property: " + p);
@@ -1374,11 +1375,16 @@ public class DefaultCodegen {
      * @return Codegen Model object
      */
     public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
+        System.out.println("creating model " + name);
         if (typeAliases == null) {
             // Only do this once during first call
             typeAliases = getAllAliases(allDefinitions);
         }
         CodegenModel m = CodegenModelFactory.newInstance(CodegenModelType.MODEL);
+        System.out.println("model parent at start:" + (m.parent !=null ? m.parent.toString() : ""));
+
+        
+
         if (reservedWords.contains(name)) {
             m.name = escapeReservedWord(name);
         } else {
@@ -1402,6 +1408,7 @@ public class DefaultCodegen {
         m.isAlias = typeAliases.containsKey(name);
 
         if (model instanceof ModelImpl) {
+            System.out.println("\tModelImpl");
             ModelImpl modelImpl = (ModelImpl) model;
             m.discriminator = modelImpl.getDiscriminator();
             if (m.discriminator != null) {
@@ -1412,9 +1419,11 @@ public class DefaultCodegen {
                 m.xmlNamespace = modelImpl.getXml().getNamespace();
                 m.xmlName = modelImpl.getXml().getName();
             }
+            System.out.println("model parent b:" + (m.parent !=null ? m.parent.toString() : ""));
         }
 
         if (model instanceof ArrayModel) {
+            System.out.println("\tArrayModel");
             ArrayModel am = (ArrayModel) model;
             ArrayProperty arrayProperty = new ArrayProperty(am.getItems());
             m.isArrayModel = true;
@@ -1422,7 +1431,9 @@ public class DefaultCodegen {
             addParentContainer(m, name, arrayProperty);
         } else if (model instanceof RefModel) {
             // TODO
+            System.out.println("\tRefModel");
         } else if (model instanceof ComposedModel) {
+            System.out.println("\tComposedModel");
             final ComposedModel composed = (ComposedModel) model;
             Map<String, Property> properties = new LinkedHashMap<String, Property>();
             List<String> required = new ArrayList<String>();
@@ -1568,6 +1579,7 @@ public class DefaultCodegen {
             }
             addVars(m, impl.getProperties(), impl.getRequired(), allDefinitions);
         }
+        System.out.println("parent=" + (m.parent != null ? m.parent.toString() : ""));
 
         postProcessModelProperties(m);
         return m;

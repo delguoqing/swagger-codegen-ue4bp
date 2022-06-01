@@ -83,7 +83,7 @@ void {{classname}}::HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceede
 
 {{#operations}}
 {{#operation}}
-bool {{classname}}::{{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request, const F{{operationIdCamelCase}}Delegate& Delegate /*= F{{operationIdCamelCase}}Delegate()*/)
+bool {{classname}}::{{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request{{#responses}}, const F{{dataType}}Delegate& Delegate{{code}} /*= F{{dataType}}Delegate()*/{/responses})
 {
 	if (!IsValid())
 		return false;
@@ -98,15 +98,25 @@ bool {{classname}}::{{operationIdCamelCase}}(const F{{operationIdCamelCase}}Requ
 
 	Request.SetupHttpRequest(HttpRequest);
 	
-	HttpRequest->OnProcessRequestComplete().BindUObject(this, &{{classname}}::On{{operationIdCamelCase}}Response, Delegate);
+	HttpRequest->OnProcessRequestComplete().BindUObject(this, &{{classname}}::On{{operationIdCamelCase}}Response{{#responses}}, Delegate{{code}}{{/responses}});
 	return HttpRequest->ProcessRequest();
 }
 
-void {{classname}}::On{{operationIdCamelCase}}Response(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, F{{operationIdCamelCase}}Delegate Delegate) const
+void {{classname}}::On{{operationIdCamelCase}}Response(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded{{#responses}}, F{{classname}}Delegate Delegate{{code}}{{/responses}}) const
 {
-	F{{operationIdCamelCase}}Response Response;
-	HandleResponse(HttpResponse, bSucceeded, Response);
-	Delegate.ExecuteIfBound(Response);
+	{{#responses}}
+	F{{{dataType}}}Response Response{{code}};
+	{{/responses}}
+
+	switch (HttpResponse->GetResponseCode())
+	{
+	{{#responses}}case {{code}}:
+	{{#isDefault}}default:{{/isDefault}}
+		HandleResponse(HttpResponse, bSucceeded, Response{{code}});
+		Delegate{{code}}.ExecuteIfBound(Response{{code}});
+		break;
+	{{/responses}}
+	}
 }
 
 {{/operation}}

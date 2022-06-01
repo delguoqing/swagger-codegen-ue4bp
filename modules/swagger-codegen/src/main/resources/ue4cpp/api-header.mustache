@@ -4,12 +4,8 @@
 #include "CoreMinimal.h"
 #include "SwaggerBaseModel.h"
 #include "{{classFilename}}Operations.h"
+#include "{{unrealModuleName}}Responses.h"
 #include "{{classFilename}}.generated.h"
-
-// forward declaration
-{{#operations}}{{#operation}}struct F{{operationIdCamelCase}}Request;
-struct F{{operationIdCamelCase}}Response;
-{{/operation}}{{/operations}}
 
 UCLASS(BlueprintType, Category="{{unrealModuleName}}")
 class {{dllapi}} {{classname}}: public UObject
@@ -26,14 +22,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ClearHeaderParams();
 
-    {{#operations}}{{#operation}}DECLARE_DYNAMIC_DELEGATE_OneParam(F{{operationIdCamelCase}}Delegate, const F{{operationIdCamelCase}}Response&, Response);
-    {{/operation}}{{/operations}}
     {{#operations}}{{#operation}}{{#description}}/* {{{description}}} */
 	{{/description}}UFUNCTION(BlueprintCallable, Meta=(BluepirntPure=false, DisplayName="{{nickname}}"))
-	bool {{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request, const F{{operationIdCamelCase}}Delegate& Delegate);
+	bool {{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request{{#responses}}, const F{{{dataType}}}Delegate& Delegate{{code}}{{/responses}});
     {{/operation}}{{/operations}}
 private:
-    {{#operations}}{{#operation}}void On{{operationIdCamelCase}}Response(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded, F{{operationIdCamelCase}}Delegate Delegate) const;
+    {{#operations}}{{#operation}}void On{{operationIdCamelCase}}Response(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded{{#responses}}, F{{{dataType}}}Delegate Delegate{{code}}{{/responses}}) const;
     {{/operation}}{{/operations}}
 	bool IsValid() const;
 	void HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceeded, FSwaggerBaseResponse& InOutResponse) const;
