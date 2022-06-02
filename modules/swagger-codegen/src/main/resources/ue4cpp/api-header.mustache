@@ -23,11 +23,11 @@ public:
 	void ClearHeaderParams();
 
     {{#operations}}{{#operation}}{{#description}}/* {{{description}}} */
-	{{/description}}UFUNCTION(BlueprintCallable, Meta=(BlueprintPure=false, DisplayName="{{nickname}}"))
-	bool {{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request{{#responses}}, const F{{{name}}}Delegate& Delegate{{^isDefault}}{{code}}{{/isDefault}}{{/responses}});
+	{{/description}}UFUNCTION(BlueprintCallable, Meta=(BlueprintPure=false, DisplayName="{{nickname}}", AutoCreateRefTerm="Other"))
+	bool {{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request{{#responses}}, const F{{{name}}}Delegate& Delegate{{^isDefault}}{{code}}{{/isDefault}}{{/responses}}, const FSwaggerBaseResponseDelegate& Other);
     {{/operation}}{{/operations}}
 private:
-    {{#operations}}{{#operation}}void On{{operationIdCamelCase}}Response(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded{{#responses}}, F{{{name}}}Delegate Delegate{{^isDefault}}{{code}}{{/isDefault}}{{/responses}}) const;
+    {{#operations}}{{#operation}}void On{{operationIdCamelCase}}Response(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded{{#responses}}, F{{{name}}}Delegate Delegate{{^isDefault}}{{code}}{{/isDefault}}{{/responses}}, FSwaggerBaseResponseDelegate OtherDelegate) const;
     {{/operation}}{{/operations}}
 	bool IsValid() const;
 	void HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceeded, FSwaggerBaseResponse& InOutResponse) const;

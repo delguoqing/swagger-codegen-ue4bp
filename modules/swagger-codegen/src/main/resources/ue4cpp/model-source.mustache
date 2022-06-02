@@ -73,7 +73,7 @@ using SwaggerCommon::TryGetJsonValue;
 void {{classname}}::WriteJson(JsonWriter& Writer) const
 {
 	{{#parent}}
-	#error inheritance not handled right now
+	//#error inheritance not handled right now
 	{{/parent}}
 	Writer->WriteObjectStart();
     {{#vars}}
@@ -103,13 +103,17 @@ bool {{classname}}::FromJson(const TSharedPtr<FJsonObject>& JsonObject)
 
 void U{{classFilename}}HelperLibrary::Break(const {{classname}}& {{classVarName}}{{#vars}}, {{{datatype}}}& Out{{name}}{{/vars}})
 {
-	{{#vars}}Out{{name}} = {{classVarName}}.{{name}};{{/vars}}
+	{{#vars}}
+	Out{{name}} = {{classVarName}}.{{name}};
+	{{/vars}}
 }
 
 {{classname}} U{{classFilename}}HelperLibrary::Make({{#vars}}{{{datatype}}} {{name}}{{#hasMore}}, {{/hasMore}}{{/vars}})
 {
 	{{classname}} {{classVarName}};
-	{{#vars}}{{classVarName}}.{{name}} = {{name}};{{/vars}}
+	{{#vars}}
+	{{classVarName}}.{{name}} = {{name}};
+	{{/vars}}
 	return {{classVarName}};
 }
 {{/model}}
