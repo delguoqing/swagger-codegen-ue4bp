@@ -587,7 +587,7 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
                 p.required = true;
             }
             for (CodegenResponse r: op1.responses) {
-                r.name = r.primitiveType ? sanitizeName(r.dataType) : sanitizeName(r.dataType.substring(1));
+                r.name = r.primitiveType ? modelNamePrefix + sanitizeName(r.dataType) : sanitizeName(r.dataType.substring(1));
             }
         }
 
@@ -776,7 +776,7 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
             HashMap<String, String> item = new HashMap<String, String>();
             item.put("dataType", dataType);     // dataType for `Content`
             boolean isModel = modelImportPaths.containsKey(dataType);
-            String baseName = isModel ? dataType.substring(1) : dataType;    // removing "F"
+            String baseName = isModel ? dataType.substring(1) : modelNamePrefix + dataType;    // removing "F"
             item.put("classname", sanitizeName(baseName));  // Response class which holds the Content can use it
 
             item.put("varName", sanitizeName(dataType));

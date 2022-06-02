@@ -8,7 +8,7 @@
 #include "{{unrealModuleName}}Responses.generated.h"
 
 {{#responseTypes}}
-USTRUCT(BlueprintType, Category={{unrealModuleName}}, meta=(DisplayName="{{nickname}} Response", HasNativeBreak="{{unrealModuleName}}.{{classname}}ResponseHelperLibrary.Break", HasNativeMake="{{unrealModuleName}}.{{className}}ResponseHelperLibrary.Make"))
+USTRUCT(BlueprintType, Category={{unrealModuleName}}, meta=(DisplayName="{{nickname}} Response", HasNativeBreak="{{unrealModuleName}}.{{classname}}ResponseHelperLibrary.Break", HasNativeMake="{{unrealModuleName}}.{{classname}}ResponseHelperLibrary.Make"))
 struct {{dllapi}} F{{classname}}Response : public FSwaggerBaseResponse
 {
 	GENERATED_BODY()

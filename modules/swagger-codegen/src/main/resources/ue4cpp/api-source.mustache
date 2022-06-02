@@ -83,7 +83,7 @@ void {{classname}}::HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceede
 
 {{#operations}}
 {{#operation}}
-bool {{classname}}::{{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request{{#responses}}, const F{{name}}Delegate& Delegate{{code}} /*= F{{name}}Delegate()*/{{/responses}})
+bool {{classname}}::{{operationIdCamelCase}}(const F{{operationIdCamelCase}}Request& Request{{#responses}}, const F{{name}}Delegate& Delegate{{^isDefault}}{{code}}{{/isDefault}} /*= F{{name}}Delegate()*/{{/responses}})
 {
 	if (!IsValid())
 		return false;
@@ -98,22 +98,27 @@ bool {{classname}}::{{operationIdCamelCase}}(const F{{operationIdCamelCase}}Requ
 
 	Request.SetupHttpRequest(HttpRequest);
 	
-	HttpRequest->OnProcessRequestComplete().BindUObject(this, &{{classname}}::On{{operationIdCamelCase}}Response{{#responses}}, Delegate{{code}}{{/responses}});
+	HttpRequest->OnProcessRequestComplete().BindUObject(this, &{{classname}}::On{{operationIdCamelCase}}Response{{#responses}}, Delegate{{^isDefault}}{{code}}{{/isDefault}}{{/responses}});
 	return HttpRequest->ProcessRequest();
 }
 
-void {{classname}}::On{{operationIdCamelCase}}Response(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded{{#responses}}, F{{name}}Delegate Delegate{{code}}{{/responses}}) const
+void {{classname}}::On{{operationIdCamelCase}}Response(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded{{#responses}}, F{{name}}Delegate Delegate{{^isDefault}}{{code}}{{/isDefault}}{{/responses}}) const
 {
 	{{#responses}}
-	F{{{name}}}Response Response{{code}};
+	F{{{name}}}Response Response{{^isDefault}}{{code}}{{/isDefault}};
 	{{/responses}}
 
 	switch (HttpResponse->GetResponseCode())
 	{
-	{{#responses}}case {{code}}:
-	{{#isDefault}}default:{{/isDefault}}
-		HandleResponse(HttpResponse, bSucceeded, Response{{code}});
-		Delegate{{code}}.ExecuteIfBound(Response{{code}});
+	{{#responses}}
+	case {{code}}:
+	{{#isDefault}}
+	default:
+	{{/isDefault}}
+		if (bSucceeded && HttpResponse.IsValid())
+			Response{{^isDefault}}{{code}}{{/isDefault}}.SetResponseString(TEXT("{{message}}"));
+		HandleResponse(HttpResponse, bSucceeded, Response{{^isDefault}}{{code}}{{/isDefault}});
+		Delegate{{^isDefault}}{{code}}{{/isDefault}}.ExecuteIfBound(Response{{^isDefault}}{{code}}{{/isDefault}});
 		break;
 	{{/responses}}
 	}
