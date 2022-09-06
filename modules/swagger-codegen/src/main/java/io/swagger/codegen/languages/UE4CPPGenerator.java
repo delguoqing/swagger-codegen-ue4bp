@@ -257,7 +257,7 @@ public class UE4CPPGenerator extends AbstractCppCodegen implements CodegenConfig
                 supportingFiles.add(new SupportingFile("api-responses-source.mustache", privateFolder, unrealModuleName + "Responses.cpp"));
 
                 supportingFiles.add(new SupportingFile("common-Build.cs.mustache", commonFolder, commonModuleName + ".Build.cs"));
-                supportingFiles.add(new SupportingFile("common-module-header.mustache", commonPrivateFolder, commonModuleName + "Module.h"));
+                supportingFiles.add(new SupportingFile("common-module-header.mustache", commonPublicFolder, commonModuleName + "Module.h"));
                 supportingFiles.add(new SupportingFile("common-module-source.mustache", commonPrivateFolder, commonModuleName + "Module.cpp"));
             }
 

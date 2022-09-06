@@ -8,6 +8,9 @@
 #include "Misc/Base64.h"
 #include "PlatformHttp.h"
 
+#include "Interfaces/IHttpResponse.h"
+#include "SwaggerCommonModule.h"
+
 class IHttpRequest;
 
 namespace SwaggerCommon
@@ -398,5 +401,7 @@ inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, TArray<uint
 	else
 		return false;
 }
+
+SWAGGERCOMMON_API void LogDeserializeResponseError(FHttpResponsePtr HttpResponse, bool LogHeaders);
 
 }
