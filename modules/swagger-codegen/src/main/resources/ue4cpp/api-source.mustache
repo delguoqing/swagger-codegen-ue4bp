@@ -120,6 +120,8 @@ void {{classname}}::On{{operationIdCamelCase}}Response(FHttpRequestPtr HttpReque
 	{{/responses}}
 	}
 
+	UE_LOG(Log{{unrealModuleName}}, Error, TEXT("Encounter http error when requesting URL %s, Response Content (type:%s):\n%s"), *(HttpRequest->GetURL()), *(HttpResponse->GetContentType()), *(HttpResponse->GetContentAsString()));
+	SwaggerCommon::LogHeaders(HttpResponse);
 	FSwaggerBaseResponse OtherResponse;
 	HandleResponse(HttpResponse, bSucceeded, OtherResponse);
 	OtherDelegate.ExecuteIfBound(OtherResponse);

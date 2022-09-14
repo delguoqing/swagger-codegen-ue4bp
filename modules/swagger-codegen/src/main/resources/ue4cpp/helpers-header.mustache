@@ -402,6 +402,7 @@ inline bool TryGetJsonValue(const TSharedPtr<FJsonValue>& JsonValue, TArray<uint
 		return false;
 }
 
-SWAGGERCOMMON_API void LogDeserializeResponseError(FHttpResponsePtr HttpResponse, bool LogHeaders);
+SWAGGERCOMMON_API void LogDeserializeResponseError(FHttpResponsePtr HttpResponse, bool bLogHeaders);
+SWAGGERCOMMON_API void LogHeaders(FHttpResponsePtr HttpResponse);
 
 }

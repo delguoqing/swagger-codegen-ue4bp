@@ -180,20 +180,25 @@ void HttpMultipartFormData::AppendString(const TCHAR* Str)
 	FormData.Append((uint8*)utf8Str.Get(), utf8Str.Length());
 }
 
-void LogDeserializeResponseError(FHttpResponsePtr HttpResponse, bool LogHeaders)
+void LogDeserializeResponseError(FHttpResponsePtr HttpResponse, bool bLogHeaders)
 {
 	UE_LOG(LogSwaggerCommon, Error, TEXT("Failed to deserialize Http response content (type:%s):\n%s"), *(HttpResponse->GetContentType()), *(HttpResponse->GetContentAsString()));
-	const auto& Headers = HttpResponse->GetAllHeaders();
-	if (LogHeaders)
+	if (bLogHeaders)
 	{
-		if (Headers.Num() == 0) {
-			UE_LOG(LogSwaggerCommon, Error, TEXT("No Headers."));
-		}
-		else {
-			UE_LOG(LogSwaggerCommon, Error, TEXT("Headers:\n"));
-			for (const auto& Header : Headers) {
-				UE_LOG(LogSwaggerCommon, Error, TEXT("%s\n"), *Header);
-			}
+		LogHeaders(HttpResponse);
+	}
+}
+
+void LogHeaders(FHttpResponsePtr HttpResponse)
+{
+	const auto& Headers = HttpResponse->GetAllHeaders();
+	if (Headers.Num() == 0) {
+		UE_LOG(LogSwaggerCommon, Error, TEXT("No Headers."));
+	}
+	else {
+		UE_LOG(LogSwaggerCommon, Error, TEXT("Headers:\n"));
+		for (const auto& Header : Headers) {
+			UE_LOG(LogSwaggerCommon, Error, TEXT("%s\n"), *Header);
 		}
 	}
 }
