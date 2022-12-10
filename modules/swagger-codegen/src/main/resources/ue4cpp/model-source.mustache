@@ -101,6 +101,13 @@ bool {{classname}}::FromJson(const TSharedPtr<FJsonObject>& JsonObject)
 	return ParseSuccess;
 }
 
+bool {{classname}}::FromJsonString(const FString& JsonStr)
+{
+	TSharedPtr<FJsonObject> JsonObject = MakeShareable(new FJsonObject);
+	TSharedRef< TJsonReader<> > Reader = TJsonReaderFactory<>::Create(JsonStr);
+	return FJsonSerializer::Deserialize(Reader, JsonObject );
+}
+
 void U{{classFilename}}HelperLibrary::Break(const {{classname}}& {{classVarName}}{{#vars}}, {{{datatype}}}& Out{{name}}{{/vars}})
 {
 	{{#vars}}
@@ -115,6 +122,22 @@ void U{{classFilename}}HelperLibrary::Break(const {{classname}}& {{classVarName}
 	{{classVarName}}.{{name}} = {{name}};
 	{{/vars}}
 	return {{classVarName}};
+}
+
+{{classname}} U{{classFilename}}HelperLibrary::FromJsonString(const FString& JsonStr)
+{
+	{{classname}} {{classVarName}};
+	{{classVarName}}.FromJsonString(JsonStr);
+	return {{classVarName}};
+}
+
+FString U{{classFilename}}HelperLibrary::ToJsonString(const {{classname}}& {{classVarName}})
+{
+	FString JsonStr;
+	JsonWriter Writer = TJsonWriterFactory<>::Create(&JsonStr);
+	{{classVarName}}.WriteJson(Writer);
+	Writer->Close();
+	return JsonStr;
 }
 {{/model}}
 {{/models}}

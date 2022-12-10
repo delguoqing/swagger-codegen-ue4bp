@@ -56,6 +56,7 @@ void {{classname}}::HandleResponse(FHttpResponsePtr HttpResponse, bool bSucceede
 		if (ContentType.StartsWith(TEXT("application/json")))
 		{
 			Content = HttpResponse->GetContentAsString();
+			InOutResponse.SetResponseString(Content);
 
 			TSharedPtr<FJsonValue> JsonValue;
 			auto Reader = TJsonReaderFactory<>::Create(Content);

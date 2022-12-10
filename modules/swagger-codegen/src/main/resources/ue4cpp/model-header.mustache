@@ -25,6 +25,7 @@ struct {{dllapi}} {{classname}} : public FSwaggerBaseModel
 public:
     virtual ~{{classname}}() {}
 	bool FromJson(const TSharedPtr<FJsonObject>& JsonObject) final;
+	bool FromJsonString(const FString& string);
 	void WriteJson(JsonWriter& Writer) const final;
 
     {{#vars}}
@@ -65,6 +66,17 @@ public:
 	{{/description}}{{/vars}}*/
 	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="Break {{name}} Struct"))
 	static void Break(const {{classname}}& {{classVarName}}{{#vars}}, {{{datatype}}}& {{name}}{{/vars}});
+	/**
+	* Construct {{name}} Struct from json string
+	@param JsonStr - json string*/
+	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="{{name}} Struct from string"))
+	static {{classname}} FromJsonString(const FString& JsonStr);
+	/**
+	* Convert {{name}} Struct to json string
+	{{#vars}}{{#description}}* @param {{name}} - {{{description}}}
+	{{/description}}{{/vars}}*/
+	UFUNCTION(BlueprintPure, Category = "{{unrealModuleName}}", meta = (BlueprintThreadSafe, DisplayName="{{name}} Struct to string"))
+	static FString ToJsonString(const {{classname}}& {{classVarName}});
 };
 {{/model}}
 {{/models}}
